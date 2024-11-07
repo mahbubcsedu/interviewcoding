@@ -60,3 +60,54 @@ Here's a list of problems with explanations and where they use the prefix sum te
 3. **Advance to More Complex Problems**: Once you're comfortable, tackle **Continuous Subarray Sum** and **Minimum Size Subarray Sum**, which involve additional conditions or require a blend of techniques.
 
 Using prefix sums can make what would otherwise be inefficient computations very quick.
+
+Here are some more challenging problems involving prefix sums. These will deepen your understanding and application of the prefix sum technique, often requiring additional data structures or a combination of algorithms.
+
+### Advanced Prefix Sum Problems
+
+#### 1. [Count of Range Sum (LeetCode #327)](https://leetcode.com/problems/count-of-range-sum/)
+   - **Problem**: Given an integer array `nums` and two integers `lower` and `upper`, return the number of range sums that lie in `[lower, upper]` inclusive.
+   - **Solution**: This problem is a harder variation of the subarray sum problem. After computing prefix sums, you can use a **Segment Tree** or **Binary Indexed Tree (BIT)** to efficiently count ranges, or even a **merge sort approach** to count ranges in \(O(n \log n)\) time.
+
+#### 2. [Maximum Sum of 3 Non-Overlapping Subarrays (LeetCode #689)](https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays/)
+   - **Problem**: Find three non-overlapping subarrays of length `k` with maximum sum.
+   - **Solution**: Use prefix sums to precompute sums for each subarray of length `k`. Then, using dynamic programming and an additional pass over the prefix sums, calculate the maximum sum of three non-overlapping subarrays in \(O(n)\) time.
+
+#### 3. [Range Sum Query 2D - Immutable (LeetCode #304)](https://leetcode.com/problems/range-sum-query-2d-immutable/)
+   - **Problem**: Implement a 2D version of the range sum query, where you are given a 2D matrix and must answer sum queries for any rectangular submatrix.
+   - **Solution**: This problem extends prefix sums to two dimensions. Build a 2D prefix sum array where each element at \((i, j)\) contains the sum of the matrix from the top-left corner \((0, 0)\) to \((i, j)\). Then you can compute the sum of any submatrix in constant time.
+
+#### 4. [K-Sum Subarrays (LeetCode #1074)](https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/)
+   - **Problem**: Given a matrix and a target, find the number of submatrices that sum up to the target.
+   - **Solution**: First, calculate prefix sums for the 2D array. Then, reduce each 2D submatrix to a 1D problem by fixing the top and bottom rows and applying a hash map-based prefix sum approach for each pair of rows, counting sums equal to the target.
+
+#### 5. [Minimum Operations to Reduce X to Zero (LeetCode #1658)](https://leetcode.com/problems/minimum-operations-to-reduce-x-to-zero/)
+   - **Problem**: You need to reduce `x` to zero by removing elements from the start or end of the array, minimizing the number of elements removed.
+   - **Solution**: This problem can be transformed to finding the longest subarray with a sum equal to `total_sum - x`. Use prefix sums and a sliding window to find the longest subarray with that target sum, which leads to the minimum number of operations.
+
+#### 6. [Maximum Sum of Two Non-Overlapping Subarrays (LeetCode #1031)](https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/)
+   - **Problem**: Find the maximum sum of two non-overlapping subarrays of lengths `L` and `M`.
+   - **Solution**: Compute prefix sums for each possible subarray of lengths `L` and `M`. Then, for each index, calculate the maximum possible sum by keeping track of the best choices for the subarrays to the left and right.
+
+#### 7. [Split Array with Equal Sum (LeetCode #548)](https://leetcode.com/problems/split-array-with-equal-sum/)
+   - **Problem**: Split the array into four parts with equal sums, and return `true` if possible.
+   - **Solution**: Use prefix sums to find all possible points where a split can result in equal sums. Use nested loops and a hash set to optimize for each split position.
+
+#### 8. [Binary Tree Maximum Path Sum (LeetCode #124)](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+   - **Problem**: Given a binary tree, find the maximum path sum where the path may start and end at any node.
+   - **Solution**: This isn’t a traditional prefix sum problem but involves computing cumulative sums for each path in a tree. You’ll need to use a recursive approach with backtracking to manage path sums and track the maximum possible path.
+
+#### 9. [Stone Game VII (LeetCode #1690)](https://leetcode.com/problems/stone-game-vii/)
+   - **Problem**: Two players are picking stones to maximize the difference between scores, with a given scoring rule based on removing stones from the start or end of an array.
+   - **Solution**: Use dynamic programming with prefix sums to precompute the score for each possible subarray, then maximize the difference between players by calculating optimal scores.
+
+---
+
+### Tips for Tackling Harder Problems with Prefix Sum
+
+1. **Combine Prefix Sums with Other Data Structures**: Many harder problems require combining prefix sums with hash maps, segment trees, binary indexed trees, or dynamic programming.
+2. **2D Prefix Sums**: Extend your prefix sum understanding to two dimensions for matrix-related problems.
+3. **Prefix Sum with Modulo**: For problems where you need to find specific remainder conditions, prefix sums modulo a given integer (e.g., modulo \(k\)) can help track the conditions.
+4. **Optimize Space Complexity**: For very large arrays or matrices, consider in-place modifications of the input or using fewer auxiliary structures if possible.
+
+Practice these advanced problems and explore optimizations with prefix sums for a comprehensive understanding.
