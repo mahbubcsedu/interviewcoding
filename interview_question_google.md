@@ -1,3 +1,4 @@
+## In a organization we are trying to fine whether manager has salary to the average of its reports. 
 To determine if a manager has an average salary equal to the average salary of their direct reports, we can break down the problem into steps. Here’s a plan for the algorithm:
 
 1. **Input Structure**:
