@@ -96,3 +96,67 @@ The output would be:
 ```python
 [-2, 0, 3, 5, 3]
 ```
+
+#### More hints about those problem
+Certainly! Here are some example problems from **LeetCode** and other competitive programming platforms where you can practice the difference array technique. I'll provide links to relevant problems when possible.
+
+---
+
+### 1. **Range Addition (LeetCode)**
+   - **Problem**: "Range Addition"
+   - **Description**: You are given a length and a list of operations, where each operation increments all elements within a specific range by a value. Return the array after all operations.
+   - **Link**: [Range Addition (LeetCode #370)](https://leetcode.com/problems/range-addition/)
+
+---
+
+### 2. **Corporate Flight Bookings (LeetCode)**
+   - **Problem**: "Corporate Flight Bookings"
+   - **Description**: Similar to range addition, but it applies flight booking changes to a range of flight seats in an array. Each operation increments the range by a specified number of seats.
+   - **Link**: [Corporate Flight Bookings (LeetCode #1109)](https://leetcode.com/problems/corporate-flight-bookings/)
+
+---
+
+### 3. **Car Pooling (LeetCode)**
+   - **Problem**: "Car Pooling"
+   - **Description**: Given a series of trip bookings that define ranges and the number of passengers, determine if a vehicle can accommodate the total passengers within a given capacity.
+   - **Link**: [Car Pooling (LeetCode #1094)](https://leetcode.com/problems/car-pooling/)
+
+---
+
+### 4. **Range XOR Queries**
+   - **Problem**: **Range XOR Queries**
+   - **Description**: This problem type often appears in coding competitions. You can create your solution for XOR range queries based on the difference array concept by applying XOR instead of addition.
+   - **Practice Link**: Try a custom implementation on platforms like **Codeforces**, **AtCoder**, or **HackerRank** using XOR operations in a difference array style.
+   - **Example Tutorial on XOR Queries**: [XOR Range Query Tutorial (GeeksforGeeks)](https://www.geeksforgeeks.org/queries-xor-values-given-range/)
+
+---
+
+### 5. **Setting Elements in Range to a Value**
+   - **Problem**: Custom problem inspired by **Range Addition**, but involves setting values directly. The difference array can be adapted to set values efficiently across ranges.
+   - **Practice Link**: You can test this concept by modifying the **Range Addition** problem to use setting instead of addition.
+   - **Relevant Reading**: Check out tutorials on **difference arrays** for insight on how to modify values directly, e.g., [GeeksforGeeks Difference Array Explanation](https://www.geeksforgeeks.org/difference-array-range-update-query-o1/).
+
+---
+
+### 6. **Range Update and Prefix Sum Queries (Codeforces)**
+   - **Problem**: You’ll often find prefix sum and cumulative sum problems that use difference arrays to optimize range updates in competitions.
+   - **Example Problem**: **Codeforces Round 290, Problem C - Yet Another Array Restoration**
+   - **Link**: [Codeforces Problem](https://codeforces.com/problemset/problem/466/C)
+
+---
+
+### 7. **Range Multiplication Updates**
+   - **Problem**: Apply range multiplications efficiently, which can be adapted using a difference array technique by multiplying ranges in an array initialized to 1.
+   - **Practice Ideas**: Try implementing this by modifying **Range Addition** and applying multiplication logic.
+   - **Relevant Discussion**: Look up techniques for **modular multiplication** for competitive programming on Codeforces or **GeeksforGeeks**.
+
+---
+
+### 8. **Cumulative Sum Queries after Range Increments**
+   - **Problem**: After applying a range of increments, compute the cumulative sum for various subarrays.
+   - **Example Problem**: This problem type is common in online platforms. Check the following:
+   - **Link**: [Difference Array for Cumulative Sum Queries (GeeksforGeeks)](https://www.geeksforgeeks.org/difference-array-range-update-query-o1/)
+
+---
+
+By practicing these problems, you'll get a strong grasp of difference arrays and how they can be applied in various scenarios. Each link should provide ample opportunity to practice and apply the technique in different contexts.
