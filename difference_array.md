@@ -160,3 +160,101 @@ Certainly! Here are some example problems from **LeetCode** and other competitiv
 ---
 
 By practicing these problems, you'll get a strong grasp of difference arrays and how they can be applied in various scenarios. Each link should provide ample opportunity to practice and apply the technique in different contexts.
+
+Certainly! Let’s walk through how to solve the **Car Pooling** problem using the **difference array** approach. The goal is to determine if it's possible to accommodate all passengers for each trip given a vehicle capacity.
+
+### Problem Summary
+- You are given a list of trips, where each trip is represented as `[num_passengers, start_location, end_location]`.
+- Each trip means that `num_passengers` passengers board at `start_location` and exit at `end_location`.
+- You need to check if, at any point, the number of passengers exceeds the vehicle’s `capacity`.
+
+### Approach Using Difference Array
+
+To solve this efficiently:
+1. Use a difference array to record the changes in passenger count at each location.
+2. Instead of updating the entire range (from `start_location` to `end_location - 1`), we:
+   - Increment `num_passengers` at `start_location` (indicating passengers board).
+   - Decrement `num_passengers` at `end_location` (indicating passengers disembark).
+3. Then, compute the cumulative sum to get the actual number of passengers at each location.
+4. Check if at any point the passenger count exceeds the vehicle’s capacity.
+
+### Code Implementation
+
+Here’s how we can implement this approach in Python:
+
+```python
+def carPooling(trips, capacity):
+    # Step 1: Find the maximum endpoint to know the size of the difference array needed
+    max_location = max(end for _, _, end in trips)
+    
+    # Step 2: Initialize the difference array with zeros up to max_location
+    diff = [0] * (max_location + 1)
+    
+    # Step 3: Apply each trip to the difference array
+    for num_passengers, start_location, end_location in trips:
+        diff[start_location] += num_passengers
+        if end_location < len(diff):
+            diff[end_location] -= num_passengers
+    
+    # Step 4: Calculate the cumulative sum and check capacity constraints
+    current_passengers = 0
+    for passengers_change in diff:
+        current_passengers += passengers_change
+        if current_passengers > capacity:
+            return False
+    
+    return True
+```
+
+### Explanation of Code Steps
+
+1. **Determine the Maximum Location**: We first identify the maximum `end_location` across all trips to set the size of the difference array.
+
+2. **Initialize the Difference Array**: Create an array `diff` initialized to zero, with a size up to the maximum location.
+
+3. **Apply Updates to the Difference Array**:
+   - For each trip `(num_passengers, start_location, end_location)`:
+     - Increment `diff[start_location]` by `num_passengers` to mark the boarding of passengers.
+     - Decrement `diff[end_location]` by `num_passengers` to mark the disembarking of passengers.
+
+4. **Compute the Cumulative Sum**:
+   - Traverse the `diff` array to calculate the running total `current_passengers` at each location.
+   - If `current_passengers` exceeds `capacity` at any point, return `False` immediately.
+
+5. **Return Result**:
+   - If the loop completes without exceeding `capacity`, return `True`, indicating that the carpool can handle all trips within the given capacity.
+
+### Example Walkthrough
+
+Suppose we have the following inputs:
+
+```python
+trips = [[2, 1, 5], [3, 3, 7], [4, 6, 9]]
+capacity = 4
+```
+
+1. **Step 3 - Apply Updates**:
+   - For trip `[2, 1, 5]`: 
+     - `diff[1] += 2` (start at location 1), `diff[5] -= 2` (end at location 5)
+   - For trip `[3, 3, 7]`:
+     - `diff[3] += 3` (start at location 3), `diff[7] -= 3` (end at location 7)
+   - For trip `[4, 6, 9]`:
+     - `diff[6] += 4` (start at location 6), `diff[9] -= 4` (end at location 9)
+
+   This results in `diff` as follows:
+   ```python
+   diff = [0, 2, 0, 3, 0, -2, 4, -3, 0, -4]
+   ```
+
+2. **Step 4 - Cumulative Sum Check**:
+   - Calculate cumulative sum and check capacity:
+     - Location 1: `current_passengers = 2` (below capacity)
+     - Location 3: `current_passengers = 5` (exceeds capacity, return `False`)
+
+   Therefore, we immediately conclude that this carpooling is not possible with the given capacity.
+
+### Complexity Analysis
+- **Time Complexity**: \(O(n + m)\), where \(n\) is the maximum location in `trips`, and \(m\) is the number of trips.
+- **Space Complexity**: \(O(n)\), for the difference array up to the maximum location.
+
+This solution efficiently handles the problem by avoiding direct range updates, which would have been more time-consuming.
