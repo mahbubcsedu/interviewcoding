@@ -111,3 +111,63 @@ Here are some more challenging problems involving prefix sums. These will deepen
 4. **Optimize Space Complexity**: For very large arrays or matrices, consider in-place modifications of the input or using fewer auxiliary structures if possible.
 
 Practice these advanced problems and explore optimizations with prefix sums for a comprehensive understanding.
+
+The "Find Pivot Index" problem on LeetCode (#724) asks you to find an index in a list where the sum of all elements to the left of that index is equal to the sum of all elements to the right of it.
+
+### Problem Statement
+Given an array of integers `nums`, return the *pivot index* of this array. The pivot index is the index where the sum of all the numbers strictly to the left is equal to the sum of all the numbers strictly to the right.
+
+If no such index exists, return `-1`. If there are multiple pivot indexes, return the left-most pivot index.
+
+**Example:**
+
+Input:
+```plaintext
+nums = [1, 7, 3, 6, 5, 6]
+```
+
+Output:
+```plaintext
+3
+```
+
+Explanation:
+- The sum of the numbers to the left of index `3` (`[1, 7, 3]`) is `11`.
+- The sum of the numbers to the right of index `3` (`[5, 6]`) is also `11`.
+
+### Solution
+The idea is to calculate the total sum of the array and then use a single pass to find the pivot index by maintaining a running sum. 
+
+1. Calculate the total sum of the array.
+2. Iterate through the array, updating the running sum of elements to the left of the current index.
+3. For each index, check if twice the running sum plus the current element is equal to the total sum.
+
+Here's the Python code to solve this problem:
+
+```python
+def pivotIndex(nums):
+    total_sum = sum(nums)
+    left_sum = 0
+    
+    for i, num in enumerate(nums):
+        if left_sum == (total_sum - left_sum - num):
+            return i
+        left_sum += num
+    
+    return -1
+```
+
+### Explanation of the Code
+1. **`total_sum = sum(nums)`**: Calculate the total sum of the array elements.
+2. **Loop through each element**:
+   - Check if the current left sum equals the right sum by comparing `left_sum == (total_sum - left_sum - num)`.
+   - If they match, the current index `i` is the pivot index.
+3. **Update `left_sum`** by adding the current element `num`.
+
+### Time Complexity
+- **O(n)**: where `n` is the length of the array. We go through the array once to calculate the total sum and once more to find the pivot index.
+
+### Space Complexity
+- **O(1)**: No extra space is required apart from a few variables.
+
+This solution is efficient for large arrays since it requires only a single pass after the initial sum calculation.
