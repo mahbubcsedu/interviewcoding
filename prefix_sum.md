@@ -172,3 +172,67 @@ def pivotIndex(nums):
 - **O(1)**: No extra space is required apart from a few variables.
 
 This solution is efficient for large arrays since it requires only a single pass after the initial sum calculation.
+This problem is an extension of the "subarray sum equals target" problem but in two dimensions. Given a matrix of integers and a target, we need to count the number of non-empty submatrices that sum to the target.
+
+### Approach
+
+The main idea is to treat each possible pair of rows as defining the top and bottom of a submatrix and then use a similar approach to the "subarray sum equals target" problem to count submatrices that sum to the target.
+
+1. **Define row boundaries**: For each pair of rows (`r1` and `r2`), we consider a compressed 1D array representing the column sums from `r1` to `r2`.
+2. **Apply prefix sum and hash map**: For each pair of rows, calculate the column sums between those rows and store the prefix sums in a hash map to find subarrays that sum to the target.
+
+### Steps
+
+1. **Iterate over pairs of rows**. For each pair of rows (`r1`, `r2`):
+   - Create a 1D array, `column_sums`, where each element `column_sums[c]` represents the sum of elements in column `c` between rows `r1` and `r2`.
+   
+2. **Use hash map to count subarrays**:
+   - Calculate the prefix sums for `column_sums` and use a hash map to count the number of subarrays in `column_sums` that sum to the target.
+   - This part works similarly to finding subarrays with a given sum in a 1D array.
+
+Here's the code implementing this solution:
+
+```python
+def numSubmatrixSumTarget(matrix, target):
+    rows, cols = len(matrix), len(matrix[0])
+    result = 0
+    
+    # Iterate over each possible pair of rows
+    for r1 in range(rows):
+        # This will store the cumulative sum between row r1 and r2 for each column
+        column_sums = [0] * cols
+        for r2 in range(r1, rows):
+            # Update the column sums for the current row r2
+            for c in range(cols):
+                column_sums[c] += matrix[r2][c]
+            
+            # Now find subarrays in column_sums that sum to target
+            # Using a dictionary to count prefix sums
+            prefix_sum_count = {0: 1}
+            current_sum = 0
+            for sum_val in column_sums:
+                current_sum += sum_val
+                # Check if there is a subarray that sums to `target`
+                if current_sum - target in prefix_sum_count:
+                    result += prefix_sum_count[current_sum - target]
+                # Update prefix sum count
+                prefix_sum_count[current_sum] = prefix_sum_count.get(current_sum, 0) + 1
+    
+    return result
+```
+
+### Explanation of the Code
+
+1. **Row Pair Loop**: We iterate over all possible pairs of rows (`r1`, `r2`).
+2. **Column Sums Calculation**: For each pair of rows, calculate the sum of elements between these two rows for each column.
+3. **Prefix Sum Hash Map**:
+   - For the `column_sums` array, calculate prefix sums and use a hash map to find the number of subarrays that sum to `target`.
+   - This part works by checking if `current_sum - target` has been seen in `prefix_sum_count`.
+   - If it has, we add the count of occurrences to the result.
+
+### Complexity Analysis
+
+- **Time Complexity**: \(O(\text{rows}^2 \times \text{cols})\). We iterate over all pairs of rows, and for each pair, we process each column and use a hash map to find subarrays with the given sum.
+- **Space Complexity**: \(O(\text{cols})\). We store only the `column_sums` array and `prefix_sum_count` dictionary.
+
+This approach efficiently finds the number of submatrices that sum to the target by reducing the problem to 1D subarray sums for each pair of rows.
