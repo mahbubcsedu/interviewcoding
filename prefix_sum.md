@@ -157,6 +157,7 @@ def pivotIndex(nums):
     return -1
 ```
 
+
 ### Explanation of the Code
 1. **`total_sum = sum(nums)`**: Calculate the total sum of the array elements.
 2. **Loop through each element**:
