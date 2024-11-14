@@ -171,6 +171,8 @@ def pivotIndex(nums):
 ### Space Complexity
 - **O(1)**: No extra space is required apart from a few variables.
 
+## 1074. Number of Submatrices That Sum to Target ##
+
 This solution is efficient for large arrays since it requires only a single pass after the initial sum calculation.
 This problem is an extension of the "subarray sum equals target" problem but in two dimensions. Given a matrix of integers and a target, we need to count the number of non-empty submatrices that sum to the target.
 
