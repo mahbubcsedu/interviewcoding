@@ -170,4 +170,296 @@ These problems don't always fit neatly into a category but are great examples of
 2. **NeetCode:**
    - [NeetCode Two-Pointer Problems](https://neetcode.io/)
 
-3
+
+
+Here’s a comprehensive list of **medium to expert-level problems** that involve the **two-pointer technique**, with one or two solutions for each problem. These problems are sourced from **LeetCode** and other interview prep sites. I’ll include brief descriptions of the problems along with solutions or explanations.
+
+---
+
+### **1. Container With Most Water (LeetCode 11)**  
+**Difficulty:** Medium  
+**Problem:** Given an array of heights, find the two lines that form a container, such that the container holds the most water. The container's width is the difference between the indices of the two lines, and its height is the smaller of the two lines.
+
+**Solution:**  
+- Use two pointers, one at the beginning and one at the end of the array.
+- Calculate the area at each step and move the pointer that points to the shorter line, as that has the potential to increase the area.
+
+```python
+def maxArea(height):
+    left, right = 0, len(height) - 1
+    max_area = 0
+    while left < right:
+        h = min(height[left], height[right])
+        max_area = max(max_area, h * (right - left))
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    return max_area
+```
+
+---
+
+### **2. 3Sum (LeetCode 15)**  
+**Difficulty:** Medium  
+**Problem:** Find all unique triplets in an array that sum to zero.
+
+**Solution:**  
+- Sort the array to make sure we can use the two-pointer technique.
+- For each element, treat it as the first element of the triplet and use two pointers to find the other two elements.
+
+```python
+def threeSum(nums):
+    nums.sort()
+    result = []
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue  # Skip duplicates
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            if total == 0:
+                result.append([nums[i], nums[left], nums[right]])
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1  # Skip duplicates
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1  # Skip duplicates
+                left += 1
+                right -= 1
+            elif total < 0:
+                left += 1
+            else:
+                right -= 1
+    return result
+```
+
+---
+
+### **3. 4Sum (LeetCode 18)**  
+**Difficulty:** Medium  
+**Problem:** Find all unique quadruplets in an array that sum to the target value.
+
+**Solution:**  
+- Similar to the 3Sum problem, but now you need to handle four numbers, so you start with a pointer at each index and use two pointers to find the remaining sum.
+
+```python
+def fourSum(nums, target):
+    nums.sort()
+    result = []
+    for i in range(len(nums) - 3):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue  # Skip duplicates
+        for j in range(i + 1, len(nums) - 2):
+            if j > i + 1 and nums[j] == nums[j - 1]:
+                continue  # Skip duplicates
+            left, right = j + 1, len(nums) - 1
+            while left < right:
+                total = nums[i] + nums[j] + nums[left] + nums[right]
+                if total == target:
+                    result.append([nums[i], nums[j], nums[left], nums[right]])
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1  # Skip duplicates
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1  # Skip duplicates
+                    left += 1
+                    right -= 1
+                elif total < target:
+                    left += 1
+                else:
+                    right -= 1
+    return result
+```
+
+---
+
+### **4. Subarray Product Less Than K (LeetCode 713)**  
+**Difficulty:** Medium  
+**Problem:** Given an array of positive integers and a number k, find how many contiguous subarrays have a product less than k.
+
+**Solution:**  
+- Use the sliding window (two-pointer) technique to efficiently count the number of subarrays whose product is less than k.
+
+```python
+def numSubarrayProductLessThanK(nums, k):
+    left = 0
+    product = 1
+    count = 0
+    for right in range(len(nums)):
+        product *= nums[right]
+        while product >= k and left <= right:
+            product //= nums[left]
+            left += 1
+        count += right - left + 1
+    return count
+```
+
+---
+
+### **5. Sort Colors (LeetCode 75)**  
+**Difficulty:** Medium  
+**Problem:** Given an array with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue. You can use the integers 0, 1, and 2 to represent the colors.
+
+**Solution:**  
+- Use the **Dutch National Flag problem** approach, which uses three pointers: one for red, one for blue, and one for white.
+
+```python
+def sortColors(nums):
+    low, mid, high = 0, 0, len(nums) - 1
+    while mid <= high:
+        if nums[mid] == 0:
+            nums[low], nums[mid] = nums[mid], nums[low]
+            low += 1
+            mid += 1
+        elif nums[mid] == 1:
+            mid += 1
+        else:
+            nums[mid], nums[high] = nums[high], nums[mid]
+            high -= 1
+    return nums
+```
+
+---
+
+### **6. Valid Palindrome II (LeetCode 680)**  
+**Difficulty:** Medium  
+**Problem:** Given a string, determine if it can be a palindrome after deleting at most one character.
+
+**Solution:**  
+- Use a two-pointer technique to check if a string is a palindrome, and when it isn't, check if deleting one character can help.
+
+```python
+def validPalindrome(s):
+    def isPalindrome(i, j):
+        while i < j:
+            if s[i] != s[j]:
+                return False
+            i += 1
+            j -= 1
+        return True
+    
+    left, right = 0, len(s) - 1
+    while left < right:
+        if s[left] != s[right]:
+            return isPalindrome(left + 1, right) or isPalindrome(left, right - 1)
+        left += 1
+        right -= 1
+    return True
+```
+
+---
+
+### **7. Trapping Rain Water (LeetCode 42)**  
+**Difficulty:** Hard  
+**Problem:** Given n non-negative integers representing the elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+**Solution:**  
+- Use the two-pointer technique with extra space for maximum heights from left and right.
+
+```python
+def trap(height):
+    left, right = 0, len(height) - 1
+    left_max, right_max = 0, 0
+    water = 0
+    while left < right:
+        if height[left] < height[right]:
+            if height[left] >= left_max:
+                left_max = height[left]
+            else:
+                water += left_max - height[left]
+            left += 1
+        else:
+            if height[right] >= right_max:
+                right_max = height[right]
+            else:
+                water += right_max - height[right]
+            right -= 1
+    return water
+```
+
+---
+
+### **8. Maximum Length of Pair Chain (LeetCode 646)**  
+**Difficulty:** Medium  
+**Problem:** Given a set of pairs, find the length of the longest chain that can be formed where the second element of a pair is strictly greater than the first element of another pair.
+
+**Solution:**  
+- Sort the pairs based on the first element, and use a two-pointer approach to find the longest increasing subsequence.
+
+```python
+def findLongestChain(pairs):
+    pairs.sort(key=lambda x: x[1])
+    curr_end = float('-inf')
+    count = 0
+    for pair in pairs:
+        if pair[0] > curr_end:
+            count += 1
+            curr_end = pair[1]
+    return count
+```
+
+---
+
+### **9. Minimum Window Substring (LeetCode 76)**  
+**Difficulty:** Hard  
+**Problem:** Given two strings `s` and `t`, find the minimum window in `s` which will contain all the characters in `t`. 
+
+**Solution:**  
+- Use the sliding window approach with two pointers to expand and contract the window to capture all characters in `t`.
+
+```python
+from collections import Counter
+
+def minWindow(s, t):
+    if not s or not t:
+        return ""
+    
+    t_count = Counter(t)
+    s_count = Counter()
+    left, right = 0, 0
+    min_len = float("inf")
+    min_window = ""
+    
+    while right < len(s):
+        s_count[s[right]] += 1
+        while all(s_count[char] >= t_count[char] for char in t_count):
+            if right - left + 1 < min_len
+
+:
+                min_len = right - left + 1
+                min_window = s[left:right + 1]
+            s_count[s[left]] -= 1
+            left += 1
+        right += 1
+        
+    return min_window
+```
+
+---
+
+### **10. Reverse Vowels of a String (LeetCode 345)**  
+**Difficulty:** Easy  
+**Problem:** Write a function that reverses the vowels of a string.
+
+**Solution:**  
+- Use two pointers to swap the vowels at the start and end of the string.
+
+```python
+def reverseVowels(s):
+    vowels = set("aeiouAEIOU")
+    s = list(s)
+    left, right = 0, len(s) - 1
+    while left < right:
+        if s[left] in vowels and s[right] in vowels:
+            s[left], s[right] = s[right], s[left]
+            left += 1
+            right -= 1
+        elif s[left] not in vowels:
+            left += 1
+        else:
+            right -= 1
+    return "".join(s)
+```
+
+---
+
+These problems will give you plenty of practice with the two-pointer technique at varying levels of difficulty. Some are based on **sliding window** or **sorting** techniques combined with two pointers, and others involve unique use cases like finding pairs or subarrays that meet specific conditions.
