@@ -463,3 +463,44 @@ def reverseVowels(s):
 ---
 
 These problems will give you plenty of practice with the two-pointer technique at varying levels of difficulty. Some are based on **sliding window** or **sorting** techniques combined with two pointers, and others involve unique use cases like finding pairs or subarrays that meet specific conditions.
+
+
+### 1574. Shortest Subarray to be Removed to Make Array Sorted
+Given an integer array arr, remove a subarray (can be empty) from arr such that the remaining elements in arr are non-decreasing.
+
+- Return the length of the shortest subarray to remove.
+
+-A subarray is a contiguous subsequence of the array.
+
+ 
+
+** Example 1: **
+```python
+Input: arr = [1,2,3,10,4,2,3,5]
+Output: 3
+Explanation: The shortest subarray we can remove is [10,4,2] of length 3. The remaining elements after that will be [1,2,3,3,5] which are sorted.
+Another correct solution is to remove the subarray [3,10,4].
+A tricky problem to practice
+```
+
+```python
+class Solution:
+    def findLengthOfShortestSubarray(self, arr: List[int]) -> int:
+        
+        # prefix increasing
+        # [1,2,3,1,1,1,2,3]
+        n=len(arr)
+        r=n-1
+
+        while r>0 and arr[r-1] <=arr[r]:
+            r-=1
+        res = r
+
+        l=0
+        while l < r and (l==0 or arr[l-1] <= arr[l]):
+            while r < n and arr[r] < arr[l]:
+                r+=1
+            res = min(res, r-l-1)
+            l+=1
+        return res
+```
