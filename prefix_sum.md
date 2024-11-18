@@ -238,3 +238,85 @@ def numSubmatrixSumTarget(matrix, target):
 - **Space Complexity**: \(O(\text{cols})\). We store only the `column_sums` array and `prefix_sum_count` dictionary.
 
 This approach efficiently finds the number of submatrices that sum to the target by reducing the problem to 1D subarray sums for each pair of rows.
+
+This problem can be solved using the **prefix sum and modulo arithmetic** to efficiently find the smallest subarray that meets the condition.
+
+### Problem Breakdown
+- Let the total sum of the array be `total_sum`.
+- We need to remove a subarray such that the sum of the remaining elements is divisible by \( p \). Mathematically:
+  \[
+  \text{remaining\_sum} \% p = 0
+  \]
+  This implies:
+  \[
+  (\text{total\_sum} - \text{subarray\_sum}) \% p = 0
+  \]
+  Rearranging gives:
+  \[
+  \text{subarray\_sum} \% p = \text{total\_sum} \% p
+  \]
+
+Let `x = total_sum % p`. The goal is to find the smallest subarray whose sum is congruent to \( x \mod p \).
+
+### Approach
+1. Use a **prefix sum** to compute the cumulative sum modulo \( p \) up to each index.
+2. Use a **hash map** (`remainder_to_index`) to store the most recent index where each prefix modulo \( p \) occurred.
+3. For each index \( i \):
+   - Compute the target modulo as `(current_prefix_sum - x) % p`.
+   - Check if the target modulo exists in `remainder_to_index`. If it does, compute the subarray length.
+   - Update the hash map with the current prefix modulo and index.
+
+### Implementation in Python
+
+```python
+def minSubarray(nums, p):
+    total_sum = sum(nums)
+    target = total_sum % p
+    if target == 0:
+        return 0  # The total sum is already divisible by p
+
+    prefix_sum = 0
+    remainder_to_index = {0: -1}  # Maps remainder -> index
+    min_length = float('inf')
+
+    for i, num in enumerate(nums):
+        prefix_sum = (prefix_sum + num) % p
+        target_remainder = (prefix_sum - target) % p
+        
+        # Adjust for negative modulo
+        if target_remainder < 0:
+            target_remainder += p
+
+        if target_remainder in remainder_to_index:
+            min_length = min(min_length, i - remainder_to_index[target_remainder])
+        
+        # Update the map with the current prefix modulo
+        remainder_to_index[prefix_sum] = i
+
+    return min_length if min_length != float('inf') else -1
+```
+
+### Explanation
+1. **Prefix Sum and Modulo**:
+   - Calculate the prefix sum modulo \( p \) to efficiently compute subarray sums modulo \( p \).
+2. **Hash Map**:
+   - Tracks the earliest index for each modulo value to minimize the subarray length.
+3. **Efficient Check**:
+   - For each index \( i \), compute the required modulo \( (current\_prefix\_sum - target) \% p \). If it exists in the map, calculate the subarray length.
+
+### Complexity
+- **Time Complexity**: \( O(n) \), where \( n \) is the size of the array (one pass through the array).
+- **Space Complexity**: \( O(p) \), for the hash map storing remainders.
+
+### Example
+#### Input:
+```python
+nums = [3, 1, 4, 2]
+p = 6
+```
+#### Output:
+```python
+result = minSubarray(nums, p)
+print(result)  # Output: 1
+```
+Here, removing the subarray `[4]` makes the sum of the remaining elements divisible by \( p = 6 \).
