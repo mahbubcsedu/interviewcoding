@@ -50,6 +50,51 @@ def dijkstra(graph, start):
 
 This function assumes `graph` is an adjacency list, where `graph[u]` contains `(v, weight)` tuples representing neighbors of node `u`.
 
+Here are more LeetCode problems that can be solved effectively using **Dijkstra's algorithm**:
+
+### Medium Level
+1. **[1514. Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/)**
+   - **Description**: Find the path with the highest probability from a source to a target node in a weighted graph where weights represent probabilities.
+   - **Technique**: Adapt Dijkstra's by maximizing probabilities instead of minimizing distances.
+
+2. **[778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)**
+   - **Description**: Find the minimum time required to swim from the top-left corner to the bottom-right corner of a grid with rising water levels.
+   - **Technique**: Use Dijkstra’s algorithm to determine the path with the minimum maximum elevation.
+
+3. **[882. Reachable Nodes in Subdivided Graph](https://leetcode.com/problems/reachable-nodes-in-subdivided-graph/)**
+   - **Description**: Find how many nodes can be reached in a weighted, directed graph after subdividing edges.
+   - **Technique**: Use Dijkstra to traverse the graph while keeping track of traversed subdivided nodes.
+
+### Hard Level
+4. **[499. The Maze III](https://leetcode.com/problems/the-maze-iii/)**
+   - **Description**: Find the shortest path for a ball to reach the hole in a maze, considering obstacles and gravity.
+   - **Technique**: Combine BFS with Dijkstra's algorithm to minimize the distance.
+
+5. **[864. Shortest Path to Get All Keys](https://leetcode.com/problems/shortest-path-to-get-all-keys/)**
+   - **Description**: Find the shortest path in a grid where keys unlock doors.
+   - **Technique**: Use Dijkstra to minimize the steps while managing the state of collected keys.
+
+6. **[1102. Path With Maximum Minimum Value](https://leetcode.com/problems/path-with-maximum-minimum-value/)**
+   - **Description**: Find the path from the top-left to the bottom-right in a grid that maximizes the minimum value along the path.
+   - **Technique**: Modify Dijkstra to maximize the minimum weight encountered on a path.
+
+7. **[1129. Shortest Path with Alternating Colors](https://leetcode.com/problems/shortest-path-with-alternating-colors/)**
+   - **Description**: Find the shortest path in a graph where edges are colored, and consecutive edges cannot share the same color.
+   - **Technique**: Use a modified BFS/Dijkstra approach to account for edge color constraints.
+
+8. **[1728. Cat and Mouse II](https://leetcode.com/problems/cat-and-mouse-ii/)**
+   - **Description**: Determine if a mouse can escape a cat in a grid while avoiding obstacles and considering the cat's speed.
+   - **Technique**: Use Dijkstra for shortest path estimation in dynamic multi-agent settings.
+
+---
+
+### Recommended Study Path
+1. Practice these problems starting from simpler ones like **Network Delay Time** and gradually progress to advanced problems like **The Maze III**.
+2. Review Dijkstra's algorithm in different contexts (e.g., maximizing values or managing constraints like colors or states).
+3. Implement from scratch to reinforce the understanding of priority queues and relaxation concepts.
+
+Let me know if you want detailed explanations or implementations for any specific problem!
+
 ---
 
 If you want detailed explanations or solutions to any specific problem listed above, let me know!
