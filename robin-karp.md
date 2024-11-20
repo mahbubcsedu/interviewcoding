@@ -186,6 +186,55 @@ pattern = "abc"
 find_anagram_substrings(text, pattern)
 ```
 
+**Leetcode: Find the first occurance of string**
+```python
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int: 
+        hlen, nlen = len(haystack), len(needle)
+
+        if hlen < nlen:
+            return -1
+        
+        # Generating hash code for both of the string
+
+        # ord(ch) - returns integer value for a unicode character
+
+        BASE = 26
+        # h_hash, n_hash=0,0
+        # power_s=1
+
+        # for i in range(len(needle)):
+        #     power_s = power_s*BASE if i > 0 else 1
+        #     h_hash = h_hash*BASE + ord(haystack[i])
+        #     n_hash= n_hash*BASE + ord(needle[i])
+        
+        h_hash = reduce(lambda h, c: h*BASE + ord(c), haystack[:nlen], 0)
+        n_hash = reduce(lambda h, c: h*BASE + ord(c), needle, 0)
+        # print(h_hash, n_hash)
+
+        power_s = BASE**max(nlen-1, 0) # BASE^|s-1|, make sure its len(n)-1
+
+
+        for i in range(nlen, hlen):
+            if h_hash==n_hash and haystack[i-nlen:i] == needle:
+                return i-nlen
+            
+            # remove first character ,
+            # last char impact is power_s * ord(haystack[i-nlen])
+            h_hash -= ord(haystack[i-nlen]) * power_s 
+            #add another at the end, to us rolling hash
+            h_hash = h_hash * BASE + ord(haystack[i]) 
+
+        # 1*26^0 + 26^1 + 26^2 +......+ 26^k-1
+         
+        # in the for loop we only checked on next character, when we are done with all, 
+        # we still have not checked until last char
+        if h_hash == n_hash and haystack[-nlen:]==needle:
+            return hlen-nlen
+
+        return -1
+```
+
 ### Conclusion
 Rabin-Karp with rolling hash is an efficient approach for solving string matching problems. It is particularly useful for handling multiple pattern matching or
 searching for anagrams or substrings. Its time complexity can be improved using the rolling hash technique, and it's often preferred when multiple substring matches are 
