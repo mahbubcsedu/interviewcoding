@@ -327,23 +327,26 @@ To solve this problem efficiently, a line sweep algorithm can be applied. The ma
 ### Code Implementation:
 ```python
 class MyCalendarTwo:
+
     def __init__(self):
         # A list to store the events as (time, type), where type is +1 for start and -1 for end.
         self.events = []
+        
 
-    def book(self, start: int, end: int) -> bool:
+    def book(self, startTime: int, endTime: int) -> bool:
         # Add the start and end events to the list of events.
-        self.events.append((start, 1))  # start of the event
-        self.events.append((end, -1))   # end of the event
+        self.events.append((startTime, 1))  # start of the event
+        self.events.append((endTime, -1))   # end of the event
+        temp = self.events.copy()
 
         # Sort the events first by time, and if times are the same, by type (-1 should come before +1)
-        self.events.sort(key=lambda x: (x[0], x[1]))
+        temp.sort(key=lambda x: (x[0], x[1]))
 
         active = 0  # This will keep track of the number of active overlapping events
-        for time, type in self.events:
+        for time, type in temp:
             active += type  # Update active count
             if active > 2:  # If there are more than 2 overlapping events
-                # Revert the changes (remove this booking)
+                # Revert the changes (remove this booking), problem here is we already sorted
                 self.events.pop()  # Remove the end event we just added
                 self.events.pop()  # Remove the start event we just added
                 return False  # Reject the booking
