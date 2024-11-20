@@ -304,3 +304,67 @@ Output: `False`.
 
 ### Conclusion:
 This solution efficiently checks for an increasing triplet subsequence using a greedy approach with two variables, making it ideal for large input sizes. It leverages a line sweep-like strategy where we update the smallest and second smallest values as we move through the array.
+
+The **"My Calendar II"** problem on LeetCode involves managing overlapping bookings in a calendar. Specifically, you need to design a class `MyCalendarTwo` that supports booking events while allowing for a maximum of two overlapping events. If a new event causes three or more overlapping events, the booking must be rejected.
+
+To solve this problem efficiently, a line sweep algorithm can be applied. The main idea behind the line sweep is to consider the "events" as intervals and sweep through the timeline, updating the number of overlapping events. Here's how we can approach this problem:
+
+### Step-by-Step Explanation of the Line Sweep Algorithm:
+1. **Events as Points**: Every booking creates two events:
+   - A starting point (when an event begins).
+   - An ending point (when an event ends).
+   
+2. **Use a Sweep Line**: Instead of keeping track of every possible time slot in the calendar, we can reduce the problem to a series of events at the start and end times of the bookings.
+
+3. **Event Sorting**: 
+   - Each event is represented as a tuple `(time, type)`, where `type` is `+1` for a start time and `-1` for an end time.
+   - The events are sorted first by time. In case of ties (when two events happen at the same time), we prioritize ending events over starting events to handle overlaps correctly.
+
+4. **Processing Events**: 
+   - As we "sweep" through the sorted events, we maintain a counter for the number of active bookings. 
+   - If the number of active bookings exceeds 2 at any point, we reject the booking.
+
+### Code Implementation:
+```python
+class MyCalendarTwo:
+    def __init__(self):
+        # A list to store the events as (time, type), where type is +1 for start and -1 for end.
+        self.events = []
+
+    def book(self, start: int, end: int) -> bool:
+        # Add the start and end events to the list of events.
+        self.events.append((start, 1))  # start of the event
+        self.events.append((end, -1))   # end of the event
+
+        # Sort the events first by time, and if times are the same, by type (-1 should come before +1)
+        self.events.sort(key=lambda x: (x[0], x[1]))
+
+        active = 0  # This will keep track of the number of active overlapping events
+        for time, type in self.events:
+            active += type  # Update active count
+            if active > 2:  # If there are more than 2 overlapping events
+                # Revert the changes (remove this booking)
+                self.events.pop()  # Remove the end event we just added
+                self.events.pop()  # Remove the start event we just added
+                return False  # Reject the booking
+        return True  # Accept the booking
+```
+
+### Explanation:
+1. **Constructor (`__init__`)**: 
+   - Initializes an empty list `self.events` to store the events in the form of tuples (time, type).
+   
+2. **Book Function (`book`)**:
+   - When a new booking is requested from `start` to `end`, we add two events:
+     - A `start` event (represented as `(start, 1)`).
+     - An `end` event (represented as `(end, -1)`).
+   - The events are sorted by their time. If two events have the same time, the end event is processed before the start event to ensure we handle the end of one event and the start of another correctly.
+   - The `active` variable tracks how many events are currently active (overlapping). If, at any point, the number of active events exceeds 2, we undo the changes and return `False` to reject the booking.
+   - If no conflicts are found, the booking is accepted, and we return `True`.
+
+### Time Complexity:
+- **Sorting the Events**: Sorting the events takes `O(N log N)`, where `N` is the number of events in the list.
+- **Processing Events**: Iterating through the events takes `O(N)`.
+Thus, the overall time complexity is `O(N log N)` for each booking operation.
+
+This approach efficiently handles the problem by focusing on events and sorting them, making it scalable even for larger inputs.
