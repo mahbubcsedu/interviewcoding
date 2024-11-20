@@ -234,7 +234,77 @@ class Solution:
 
         return -1
 ```
+**Leetcode: Repeated string matching**
+```python
+class Solution:
+    def repeatedStringMatch(self, a: str, b: str) -> int:
+        # my idea was ok
+        # we need to match len and one plus
 
+        # ab, ababab, [2,6], 3 times, len(b)-1 = 5//3 == 1
+        # ab, abababa [2, 7] , 3 times but need 4 fimes
+        # abc, abcabcabca [3, 10], 4 times
+        # abc, cabcab [3, 6], but cabcabcab
+
+        # find (10-1)/3 = 3 + 1, 11-1/3 = 3 +1, 12-1/3=3+1, 13-1/3=4
+        # so this formula return value of the top of that segments
+        # q = (len(b)-1)// len(a)+1
+        
+
+        # for i in range(2):
+        #     if b in a * (q+i):
+        #         return q+i
+        # return -1
+
+        # ROBIN-KARP
+        # as we can consider a as circular, so we will not create a array but use 
+        # a repeatedly and use robin karp until length (len(a)*(q+1) times)
+        # RKM checks hash, if hash is different, they are definitely not matching
+        # if hash is equal, they may be matching and we need another check to confirm
+
+        def check(index):
+            for i, x in enumerate(b):
+                y = a[(index+i) % len(a)]
+                if y != x:
+                    return False
+            return True
+        
+        q = (len(b)-1)//len(a) + 1
+        
+        # for hash, we need a prime number (big) and and a huge MOD
+        p, MOD = 113, 10**9 + 7
+        p_inv = pow(p, MOD-2, MOD)
+        power = 1
+
+        b_hash = 0
+
+        for x in map(ord, b):
+            b_hash += power * x
+            b_hash %= MOD
+            power = (power *p) % MOD
+
+        a_hash = 0
+        power = 1
+        # create first repeated a's hash that has eact length of b
+        for i in range(len(b)):
+            a_hash += power * ord(a[i%len(a)])
+            a_hash %= MOD
+            power = (power * p) % MOD
+        
+        # check if hash is equal 
+
+        if a_hash == b_hash and check(0): return q
+        # if not we do one more time by shifting
+        
+        power = (power * p_inv) % MOD
+        for i in range(len(b), (q+1) * len(a)):
+            a_hash = (a_hash - ord(a[(i-len(b)) % len(a)])) * p_inv
+            a_hash += power * ord(a[i%len(a)])
+            a_hash %=MOD
+            if a_hash==b_hash and check(i-len(b)+1):
+                return q if i < q*len(a) else q+1
+        return -1
+```
 ### Conclusion
 Rabin-Karp with rolling hash is an efficient approach for solving string matching problems. It is particularly useful for handling multiple pattern matching or
 searching for anagrams or substrings. Its time complexity can be improved using the rolling hash technique, and it's often preferred when multiple substring matches are 
