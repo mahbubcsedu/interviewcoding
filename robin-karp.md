@@ -10,10 +10,18 @@ The **Rabin-Karp algorithm** is a string matching algorithm that uses a hashing 
 
 2. **Hash Function**:
    - A common hash function is based on polynomial rolling hash: 
-     \[
-     H(s) = (s_0 \cdot b^0 + s_1 \cdot b^1 + s_2 \cdot b^2 + ... + s_{m-1} \cdot b^{m-1}) \mod p
-     \]
-     where `b` is the base and `p` is a large prime number.
+     The rolling hash is a technique to efficiently compute the hash for substrings. If `s = s_0 s_1 ... s_{m-1}` is the string, its hash can be computed as:
+
+      $$
+      H(s) = (s_0 \cdot b^0 + s_1 \cdot b^1 + s_2 \cdot b^2 + ... + s_{m-1} \cdot b^{m-1}) \mod p
+      $$
+      
+      where:
+      - \( b \) is a base,
+      - \( p \) is a large prime number,
+      - \( s_i \) is the character at position \( i \).
+           where `b` is the base and `p` is a large prime number.
+  
    - The idea is to compute this hash value for the pattern and then use the rolling hash to compute the hash for every substring of length `m` in the text.
    - **Collision Handling**: Since hash functions can sometimes result in collisions (different substrings having the same hash value), if two hash values match, we need to perform a direct string comparison to confirm the match.
 
@@ -75,11 +83,36 @@ rabin_karp(text, pattern)
 1. **d** and **q** are constants for the hash function. `d` is the size of the alphabet (256 for ASCII characters) and `q` is a prime number used for modulus to reduce hash collisions.
 2. We calculate the hash of the pattern and the first substring of the text. We then slide over the text, updating the hash using the rolling hash technique.
 3. If the hash of a substring matches the hash of the pattern, we check the actual substring for a match.
-4. The rolling hash allows us to update the hash efficiently by using the formula:
-   \[
-   \text{new\_hash} = (d \times (\text{old\_hash} - \text{ord(text[i])} \times h) + \text{ord(text[i + m])}) \% q
-   \]
-   where `h = d^(m-1) % q` is the precomputed value for sliding the window.
+Here is a rewritten version for your GitHub wiki:
+
+---
+
+### Rolling Hash Formula
+
+The rolling hash technique enables efficient updating of the hash by using the following formula:
+
+$$
+H_{\text{new}} = (b \cdot (H_{\text{old}} - s[i] \cdot b^{m-1}) + s[i+m]) \mod p
+$$
+
+Where:
+- \( H_{\text{old}} \) is the hash of the previous window.
+- \( s[i] \) and \( s[i+m] \) represent characters in the string at positions \( i \) and \( i+m \), respectively.
+- \( b \) is the base of the hash function.
+- \( p \) is a large prime number used to mod the result.
+- \( m \) is the length of the substring being hashed.
+
+Additionally, the precomputed value for sliding the window is:
+
+$$
+h = b^{m-1} \mod p
+$$
+
+This precomputed value helps in efficiently updating the hash as the window slides over the string.
+
+--- 
+
+This version is clearer and formatted for ease of understanding within a wiki context.
 
 ### Medium to Hard Level Problems Solvable by Rabin-Karp
 
