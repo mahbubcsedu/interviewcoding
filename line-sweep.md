@@ -204,3 +204,103 @@ Finally, reverse the result to get `[2, 1, 1, 0]`, which is the correct output.
 
 ### Conclusion:
 The **Line Sweep Algorithm** combined with **Binary Search** (through a `SortedList`) provides an efficient solution to the "Count of Smaller Numbers After Self" problem. This approach significantly reduces the time complexity from \(O(n^2)\) to \(O(n \log n)\), making it feasible to solve larger input sizes.
+
+Leetcode Problem 334, **Increasing Triplet Subsequence**, asks us to determine if a given array of integers contains an increasing subsequence of length 3. The goal is to check if there exists a subsequence `i < j < k` such that `arr[i] < arr[j] < arr[k]`.
+
+### Problem Breakdown:
+We need to find three numbers in the array such that:
+- There exists an element smaller than the current element at position `j` before it (let's call it `first`).
+- There exists an element larger than the current element at position `j` after it (let's call it `second`).
+
+The naive approach would be to use three nested loops, which would be inefficient with a time complexity of \(O(n^3)\). However, we can solve this problem efficiently with a greedy approach using **two variables** and a single pass through the array, which is closely related to a **line sweep** strategy.
+
+### Approach:
+
+1. **Two variables (first, second):**
+   - Let `first` be the smallest value found so far while sweeping through the array.
+   - Let `second` be the smallest value greater than `first` encountered after `first`.
+   
+   The idea is to track the two smallest values in the array that could form an increasing triplet.
+
+2. **Greedy Process:**
+   - As we traverse the array, for each element `num`:
+     - If `num` is smaller than or equal to `first`, update `first`.
+     - If `num` is greater than `first` but smaller than or equal to `second`, update `second`.
+     - If `num` is greater than `second`, it means we have found a triplet (`first`, `second`, and `num`), and we can return `True`.
+
+3. **Result:**
+   - If we finish iterating through the array and haven't found a triplet, return `False`.
+
+This approach works in **O(n)** time complexity, where `n` is the length of the array, because we make a single pass through the array and only use a constant amount of extra space.
+
+### Solution Code:
+
+```python
+def increasingTriplet(nums):
+    # Initialize first and second to infinity
+    first = second = float('inf')
+    
+    for num in nums:
+        if num <= first:
+            first = num  # Update first to be the smallest value so far
+        elif num <= second:
+            second = num  # Update second to be the smallest value greater than first
+        else:
+            # If we find a number greater than both first and second, we have a triplet
+            return True
+    
+    return False  # No triplet found
+
+# Example usage
+nums = [1, 2, 3, 4, 5]
+print(increasingTriplet(nums))  # Output: True
+
+nums = [5, 4, 3, 2, 1]
+print(increasingTriplet(nums))  # Output: False
+```
+
+### Explanation:
+
+1. **Initialization:**
+   - `first` and `second` are initially set to infinity (`float('inf')`), representing that no valid subsequence has been found yet.
+
+2. **Traversing the Array:**
+   - For each `num` in the array, we check:
+     - If `num` is less than or equal to `first`, we update `first`. This means we are looking for a potential smallest number to start an increasing subsequence.
+     - If `num` is greater than `first` but less than or equal to `second`, we update `second`. This means we've found a valid second element that could form an increasing subsequence with `first`.
+     - If `num` is greater than `second`, we've found a third element that completes the increasing subsequence, so we return `True`.
+
+3. **Return Value:**
+   - If we complete the loop without finding a triplet, we return `False`.
+
+### Time and Space Complexity:
+
+- **Time Complexity:** \(O(n)\), where `n` is the number of elements in the input array. We iterate through the array once.
+- **Space Complexity:** \(O(1)\), because we only use a constant amount of extra space for the `first` and `second` variables.
+
+### Example Walkthrough:
+
+#### Example 1:
+Input: `[1, 2, 3, 4, 5]`
+- Initialize: `first = inf`, `second = inf`.
+- Iteration:
+  - `num = 1`: `first = 1`, `second = inf`.
+  - `num = 2`: `second = 2`.
+  - `num = 3`: Found `num > second`, so return `True`.
+  
+Output: `True`.
+
+#### Example 2:
+Input: `[5, 4, 3, 2, 1]`
+- Initialize: `first = inf`, `second = inf`.
+- Iteration:
+  - `num = 5`: `first = 5`, `second = inf`.
+  - `num = 4`: `first = 4`, `second = inf`.
+  - `num = 3`: `first = 3`, `second = inf`.
+  - `num = 2`: `first = 2`, `second = inf`.
+  - `num = 1`: `first = 1`, `second = inf`.
+  
+Output: `False`.
+
+### Conclusion:
+This solution efficiently checks for an increasing triplet subsequence using a greedy approach with two variables, making it ideal for large input sizes. It leverages a line sweep-like strategy where we update the smallest and second smallest values as we move through the array.
