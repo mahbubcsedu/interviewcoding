@@ -268,3 +268,32 @@ print("Matching:", matching)
 ---
 
 This approach ensures an optimal solution for the **Job Scheduling Problem** using **Maximum Bipartite Matching**.
+
+### Maximum number of accepted inviation (leetcode 1820)
+```python
+class Solution:
+    def maximumInvitations(self, grid: List[List[int]]) -> int:
+
+        BOYS, GIRLS = len(grid), len(grid[0])
+        matches = {}
+
+        def dfs(boy, visited):
+            for girl in range(GIRLS):
+                # if boy wants to send invitation to girl or the girl already have not
+                # been asked before
+                if grid[boy][girl] and girl not in visited:
+                    visited.add(girl)
+                    # girl is available or if her partner can find alternative, then she can 
+                    # go with the current boy
+                    if girl not in matches or dfs(matches[girl], visited):
+                        matches[girl]=boy
+                        return True
+            return False
+        
+        # total = 0
+        for boy in range(BOYS):
+            dfs(boy, set())
+                
+        return len(matches)
+        
+```
