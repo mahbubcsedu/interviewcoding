@@ -262,8 +262,8 @@ print("Matching:", matching)
 ---
 
 ### **Complexity**
-- **Time Complexity**: \(O(V \cdot E)\), where \(V\) is the number of jobs and workers, and \(E\) is the number of edges.
-- **Space Complexity**: \(O(V + E)\) for the adjacency list.
+- **Time Complexity**: $$O(V*E)$$, where \(V\)  is the number of jobs and workers, and \(E\) is the number of edges.
+- **Space Complexity**: $$O(V + E)$$ for the adjacency list.
 
 ---
 
