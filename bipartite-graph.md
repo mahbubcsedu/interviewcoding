@@ -297,3 +297,155 @@ class Solution:
         return len(matches)
         
 ```
+
+### **Kuhn's Matching Algorithm**
+
+Kuhn's algorithm is a classic method used to find the **maximum bipartite matching** in a bipartite graph. It is based on a **DFS-based augmenting path** strategy and works efficiently with an adjacency list representation of the graph.
+
+---
+
+### **Problem Statement**
+Given a bipartite graph \( G = (U, V, E) \):
+1. \( U \): Set of vertices on one side of the bipartition.
+2. \( V \): Set of vertices on the other side.
+3. \( E \): Edges connecting \( U \) and \( V \).
+
+The goal is to find the **maximum matching**, i.e., the largest set of edges such that:
+- Each vertex in \( U \) and \( V \) is incident to at most one edge in the set.
+
+---
+
+### **Algorithm Description**
+
+1. **Matching Initialization**:
+   - Start with an empty matching (no edges initially matched).
+   - Maintain a `match` array to store the matched vertex for each vertex in \( V \).
+
+2. **Augmenting Path**:
+   - For each unmatched vertex in \( U \), perform a DFS to find an augmenting path.
+   - An **augmenting path** is a path that alternates between unmatched and matched edges, starting and ending at unmatched vertices.
+
+3. **Augment the Matching**:
+   - If an augmenting path is found, flip the edges (matched ↔ unmatched) along the path to increase the size of the matching.
+
+4. **Repeat**:
+   - Continue searching for augmenting paths until no more paths can be found.
+
+5. **Result**:
+   - The size of the matching when no more augmenting paths exist is the **maximum bipartite matching**.
+
+---
+
+### **Python Implementation**
+
+Here is the Python implementation of Kuhn's algorithm:
+
+```python
+def kuhn(u, visited, match, graph):
+    """
+    Perform DFS to find an augmenting path.
+    :param u: Current vertex in U.
+    :param visited: List to mark visited vertices in V.
+    :param match: List storing the match for each vertex in V.
+    :param graph: Adjacency list of the bipartite graph.
+    :return: True if an augmenting path is found.
+    """
+    for v in graph[u]:
+        if not visited[v]:
+            visited[v] = True
+            # If v is unmatched or its match can find an alternate path
+            if match[v] == -1 or kuhn(match[v], visited, match, graph):
+                match[v] = u
+                return True
+    return False
+
+def maximum_bipartite_matching(graph, U, V):
+    """
+    Find the maximum matching in a bipartite graph using Kuhn's algorithm.
+    :param graph: Adjacency list of the bipartite graph.
+    :param U: List of vertices in set U.
+    :param V: List of vertices in set V.
+    :return: The size of the maximum matching.
+    """
+    match = [-1] * len(V)  # Matches for vertices in V
+    result = 0
+
+    for u in U:
+        visited = [False] * len(V)
+        if kuhn(u, visited, match, graph):
+            result += 1
+
+    return result, match
+```
+
+---
+
+### **Example Usage**
+
+#### Input
+```python
+# Bipartite graph with 4 vertices in U and 4 vertices in V
+U = [0, 1, 2, 3]
+V = [0, 1, 2, 3]
+
+# Edges in the bipartite graph
+edges = [
+    (0, 0), (0, 1),
+    (1, 1), (1, 2),
+    (2, 2), (3, 3)
+]
+
+# Convert edges to adjacency list
+graph = {u: [] for u in U}
+for u, v in edges:
+    graph[u].append(v)
+
+# Compute maximum bipartite matching
+max_matching, matches = maximum_bipartite_matching(graph, U, V)
+print("Maximum Matching:", max_matching)
+print("Matches:", matches)
+```
+
+#### Output
+```
+Maximum Matching: 4
+Matches: [0, 1, 2, 3]
+```
+
+---
+
+### **Example Walkthrough**
+
+#### Graph Representation
+- \( U = \{0, 1, 2, 3\} \), \( V = \{0, 1, 2, 3\} \).
+- Edges: \( (0, 0), (0, 1), (1, 1), (1, 2), (2, 2), (3, 3) \).
+
+#### Steps:
+1. Start with an empty matching.
+2. For \( u = 0 \), find an augmenting path \( 0 → 0 \). Update \( match[0] = 0 \).
+3. For \( u = 1 \), find an augmenting path \( 1 → 1 \). Update \( match[1] = 1 \).
+4. For \( u = 2 \), find an augmenting path \( 2 → 2 \). Update \( match[2] = 2 \).
+5. For \( u = 3 \), find an augmenting path \( 3 → 3 \). Update \( match[3] = 3 \).
+
+Result:
+- Maximum matching size = 4.
+- Matches: Each vertex in \( V \) is matched with a unique vertex in \( U \).
+
+---
+
+### **Complexity**
+
+- **Time Complexity**: \(O(V \cdot E)\), where \(V\) is the number of vertices in \(U\) and \(V\), and \(E\) is the number of edges.
+  - Each DFS runs in \(O(E)\).
+  - At most \(O(V)\) DFS calls.
+
+- **Space Complexity**: \(O(V + E)\) for the adjacency list and visited array.
+
+---
+
+### **Applications**
+1. Job scheduling problems.
+2. Assigning tasks in resource allocation.
+3. Matching problems in networks, markets, and logistics.
+
+Kuhn's algorithm is simple and efficient for bipartite matching and forms the foundation for more advanced methods like the **Hopcroft-Karp algorithm**.
