@@ -135,3 +135,136 @@ The BFS will color nodes alternately. Starting from node `0` with color `0`, nod
 4. **Practice with Matching Problems**: Many advanced bipartite graph problems involve matching, so explore augmenting paths and Hungarian algorithms.
 
 By solving these problems, you’ll gain a solid understanding of bipartite graphs and their applications in graph theory and real-world scenarios. Happy coding!
+
+The **Job Scheduling Problem** can be solved using a **Maximum Bipartite Matching** algorithm when framed as a bipartite graph. Here's a walkthrough of the approach:
+
+---
+
+### **Problem Statement**
+Given:
+1. A set of jobs \(J = \{j_1, j_2, ..., j_n\}\).
+2. A set of workers \(W = \{w_1, w_2, ..., w_m\}\).
+3. A bipartite graph \(G\), where:
+   - An edge exists between \(j_i\) and \(w_k\) if worker \(w_k\) can perform job \(j_i\).
+
+Objective: 
+Maximize the number of jobs assigned such that each job is assigned to one worker, and each worker performs at most one job.
+
+---
+
+### **Formulating as a Bipartite Graph**
+1. Represent jobs and workers as two disjoint sets of vertices.
+2. Create edges between jobs and workers based on compatibility.
+3. Solve for the **maximum bipartite matching**.
+
+---
+
+### **Maximum Bipartite Matching Algorithm**
+
+The **Ford-Fulkerson** or **DFS-based Augmented Path** approach is commonly used for bipartite matching:
+1. Use a **DFS** to find augmenting paths in the graph.
+2. Maintain a `match` array to track assignments.
+3. If a worker or job can be reassigned to increase the matching, adjust the `match` accordingly.
+
+---
+
+### **Python Implementation**
+
+Here is a DFS-based approach for the problem:
+
+```python
+def bpm(graph, u, visited, match):
+    """
+    Helper function for DFS-based approach to find augmenting paths.
+    :param graph: Adjacency list representing the bipartite graph.
+    :param u: Current job.
+    :param visited: Array to mark visited workers.
+    :param match: Array storing the current match for each worker.
+    :return: True if a matching is found.
+    """
+    for v in graph[u]:  # Iterate over all workers connected to this job
+        if not visited[v]:
+            visited[v] = True  # Mark worker as visited
+            
+            # If worker is not matched or can find an alternate job
+            if match[v] == -1 or bpm(graph, match[v], visited, match):
+                match[v] = u  # Assign job to worker
+                return True
+    return False
+
+def max_bipartite_matching(jobs, workers, edges):
+    """
+    Main function to compute maximum bipartite matching.
+    :param jobs: List of jobs.
+    :param workers: List of workers.
+    :param edges: List of edges (job, worker pairs).
+    :return: Maximum number of jobs assigned and matching.
+    """
+    # Build adjacency list for the bipartite graph
+    n = len(jobs)
+    m = len(workers)
+    graph = [[] for _ in range(n)]
+    for job, worker in edges:
+        graph[job].append(worker)
+
+    # Initialize matching array and count
+    match = [-1] * m  # Store which worker is assigned to each job (-1 for unmatched)
+    result = 0
+
+    # Try to find a match for every job
+    for u in range(n):
+        visited = [False] * m
+        if bpm(graph, u, visited, match):
+            result += 1
+
+    return result, match
+```
+
+---
+
+### **Example**
+
+#### Input
+- Jobs: `[0, 1, 2]` (indices of jobs).
+- Workers: `[0, 1, 2]` (indices of workers).
+- Edges: `[(0, 0), (0, 1), (1, 1), (2, 2)]` (job-worker pairs).
+
+#### Output
+Maximum number of jobs assigned: `3`.
+
+#### Usage
+
+```python
+jobs = [0, 1, 2]
+workers = [0, 1, 2]
+edges = [(0, 0), (0, 1), (1, 1), (2, 2)]
+
+max_jobs, matching = max_bipartite_matching(jobs, workers, edges)
+print("Maximum Jobs Assigned:", max_jobs)
+print("Matching:", matching)
+```
+
+---
+
+### **Explanation**
+1. Build the adjacency list:
+   ```
+   Job 0: [0, 1]
+   Job 1: [1]
+   Job 2: [2]
+   ```
+2. DFS to find augmenting paths:
+   - Job 0 → Worker 0.
+   - Job 1 → Worker 1.
+   - Job 2 → Worker 2.
+3. Result: All jobs are matched.
+
+---
+
+### **Complexity**
+- **Time Complexity**: \(O(V \cdot E)\), where \(V\) is the number of jobs and workers, and \(E\) is the number of edges.
+- **Space Complexity**: \(O(V + E)\) for the adjacency list.
+
+---
+
+This approach ensures an optimal solution for the **Job Scheduling Problem** using **Maximum Bipartite Matching**.
