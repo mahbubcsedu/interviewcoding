@@ -85,6 +85,7 @@ The problem is **NP-complete**, meaning no polynomial-time solution is known for
 
 Let me know if you want detailed solutions or explanations for any of these!
 
+## Graph Valid Tree
 The **Graph Valid Tree** problem cannot be directly solved using Hamiltonian concepts efficiently because checking for a Hamiltonian Path is an NP-complete problem. However, understanding Hamiltonian paths provides useful insights when validating paths in a graph.
 
 To solve **Graph Valid Tree**, we can instead rely on simpler graph properties:
@@ -156,8 +157,8 @@ print(valid_tree(n, edges))  # Output: True
 
 If you'd like, I can demonstrate how to reduce Graph Valid Tree to a Hamiltonian Path problem, but it won't be practical for large graphs. Would you like that?
 
-
-Certainly! **LeetCode 980: Unique Paths III** is a problem that involves finding the number of unique paths that visit all non-obstacle cells in a grid exactly once, starting from a specific cell and ending at another specific cell.
+## LeetCode 980: Unique Paths III
+**LeetCode 980: Unique Paths III** is a problem that involves finding the number of unique paths that visit all non-obstacle cells in a grid exactly once, starting from a specific cell and ending at another specific cell.
 
 ---
 
