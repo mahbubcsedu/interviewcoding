@@ -155,3 +155,118 @@ print(valid_tree(n, edges))  # Output: True
 2. **Efficiency**: Checking for a Hamiltonian path requires exploring all permutations or exponential backtracking, while validating a tree only requires \(O(V + E)\) operations.
 
 If you'd like, I can demonstrate how to reduce Graph Valid Tree to a Hamiltonian Path problem, but it won't be practical for large graphs. Would you like that?
+
+
+Certainly! **LeetCode 980: Unique Paths III** is a problem that involves finding the number of unique paths that visit all non-obstacle cells in a grid exactly once, starting from a specific cell and ending at another specific cell.
+
+---
+
+### Problem Analysis
+
+1. **Input**:  
+   A grid where:
+   - `0` represents an empty cell.
+   - `-1` represents an obstacle.
+   - `1` represents the starting cell.
+   - `2` represents the ending cell.
+
+2. **Output**:  
+   The number of unique paths from the start cell to the end cell that visit all empty cells exactly once.
+
+3. **Constraints**:
+   - You must visit all non-obstacle cells.
+   - Each cell can only be visited once in a single path.
+
+---
+
+### Approach
+
+We can solve this problem using **backtracking**:
+
+1. **Count Non-Obstacle Cells**: Count the total number of cells that must be visited.
+2. **Find Start and End Points**: Identify the starting (`1`) and ending (`2`) positions.
+3. **Backtracking Function**:
+   - Start from the `1` cell.
+   - Move to all possible neighbors (up, down, left, right).
+   - Mark cells as visited during exploration and unmark them during backtracking.
+   - Stop when reaching the end cell (`2`) after visiting all required cells.
+
+4. **Base Cases**:
+   - If we reach the ending cell and all empty cells have been visited, count this as a valid path.
+   - If we move out of bounds, hit an obstacle, or revisit a cell, terminate the path.
+
+---
+
+### Code Implementation
+
+Here’s the Python code for the solution:
+
+```python
+def uniquePathsIII(grid):
+    rows, cols = len(grid), len(grid[0])
+    empty_cells = 0
+    start_x = start_y = end_x = end_y = 0
+
+    # Count empty cells and locate start and end points
+    for i in range(rows):
+        for j in range(cols):
+            if grid[i][j] == 0:
+                empty_cells += 1
+            elif grid[i][j] == 1:
+                start_x, start_y = i, j
+            elif grid[i][j] == 2:
+                end_x, end_y = i, j
+
+    def backtrack(x, y, remaining):
+        # If we reach the end cell with all cells visited
+        if x == end_x and y == end_y:
+            return 1 if remaining == 0 else 0
+
+        # Mark the current cell as visited
+        grid[x][y] = -1
+        paths = 0
+
+        # Explore neighbors
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny] in (0, 2):
+                paths += backtrack(nx, ny, remaining - 1)
+
+        # Backtrack (unmark the cell)
+        grid[x][y] = 0
+
+        return paths
+
+    # Start the backtracking from the starting cell
+    return backtrack(start_x, start_y, empty_cells + 1)
+
+# Example Usage
+grid = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 2, -1]]
+print(uniquePathsIII(grid))  # Output: 2
+```
+
+---
+
+### Explanation of the Code
+
+1. **Grid Traversal**:
+   - Start from the cell marked `1`.
+   - Traverse through valid cells (either `0` or `2`).
+
+2. **Recursive Backtracking**:
+   - Each recursive call moves to a neighboring cell and decrements the remaining cells to visit.
+   - If all conditions are met at the end cell, increment the path count.
+
+3. **Backtracking**:
+   - After exploring all possibilities from a cell, restore its state to allow exploration of other paths.
+
+---
+
+### Complexity
+
+- **Time Complexity**: \(O(4^n)\), where \(n\) is the number of empty cells. This is due to exploring 4 directions at each step.
+- **Space Complexity**: \(O(n)\) for the recursive call stack.
+
+---
+
+Let me know if you'd like further explanation or examples for this problem!
