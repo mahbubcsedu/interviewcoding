@@ -154,3 +154,76 @@ These problems may require a combination of sliding window and advanced techniqu
 
 1. **Leetcode Sliding Window Problems:**
    - [Leetcode Sliding Window Problems](https://leetcode.com/problem
+
+## Leetcode 395:
+Given a string s and an integer k, return the length of the longest substring of s such that the frequency of each character in this substring is greater than or equal to k.
+
+if no such substring exists, return 0.
+
+ 
+```
+Example 1:
+
+Input: s = "aaabb", k = 3
+Output: 3
+Explanation: The longest substring is "aaa", as 'a' is repeated 3 times.
+Example 2:
+
+Input: s = "ababbc", k = 2
+Output: 5
+Explanation: The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.
+```
+
+```python
+class Solution:
+    def longestSubstring(self, s: str, k: int) -> int:
+        count_map=[0]*26 # small latter only
+        max_uniq=len(set(s))
+        result=0
+
+        """
+        For each uniq count, we will run the while loop and fidn the max length
+        for uniq character 1, what is the max length
+        for uniq character 2, what is max window
+        for uniq character 3 what is max window
+        for unqie character max_uniq, what is the max window
+        and return the max of all of these calculations
+
+        for unique cur_uniqe, we will try to find window that has only cur_unique, if greater shrink, if less continue expand
+        if equal then check if everyone has at least k, and to check this, keep track of number of uniq and at least k of letters, if both matches we know
+        that this window is a candidate
+        """
+        for cur_uniq in range(1, max_uniq+1):
+            count_map=[0] * 26
+
+            start, end, idx, unique, count_at_leastk=0,0,0,0,0
+
+            while end < len(s):
+                if unique <=cur_uniq:
+                    idx = ord(s[end])-ord('a')
+                    
+                    if count_map[idx] == 0:
+                        unique +=1
+
+                    count_map[idx]+=1
+
+                    if count_map[idx]==k:
+                        count_at_leastk+=1
+                    end+=1
+                else:
+                    idx=ord(s[start])-ord('a')
+                    
+                    if count_map[idx]==k:
+                        count_at_leastk -=1
+                    
+                    count_map[idx]-=1
+
+                    if count_map[idx]==0:
+                        unique-=1
+                    start+=1
+
+                if unique == cur_uniq and unique == count_at_leastk:
+                    result = max(end-start, result)
+        return result    
+        
+```
