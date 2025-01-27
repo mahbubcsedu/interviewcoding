@@ -781,3 +781,63 @@ print(f"Example 7: {result7}") # Output 2
 
 ```
 
+## Valid deliveries
+Doordash virtual onsite question:
+Given a set list of pickups and deliveries for order, figure out if the given list is valid or not.
+A delivery cannot happen for an order before pickup.
+
+```
+Examples below:
+[P1, P2, D1, D2]==>valid
+[P1, D1, P2, D2]==>valid
+[P1, D2, D1, P2]==>invalid
+[P1, D2]==>invalid
+[P1, P2]==>invalid
+[P1, D1, D1]==>invalid
+[]==>valid
+[P1, P1, D1]==>invalid
+[P1, P1, D1, D1]==>invalid
+[P1, D1, P1]==>invalid
+[P1, D1, P1, D1]==>invalid
+```
+```python
+def is_valid_sequence(sequence):
+    pickups = set()
+    deliveries = set()
+    seen_events = set()
+
+    for event in sequence:
+        if event in seen_events:
+            return False
+        seen_events.add(event)
+
+        if event.startswith('P'):
+            pickups.add(event[1:])
+        elif event.startswith('D'):
+            if event[1:] not in pickups or event[1:] in deliveries:
+                return False
+            deliveries.add(event[1:])
+    
+    return pickups == deliveries
+
+# Test cases
+
+test_cases = [
+    (["P1", "P2", "D1", "D2"], True),
+    (["P1", "D1", "P2", "D2"], True),
+    (["P1", "D2", "D1", "P2"], False),
+    (["P1", "D2"], False),
+    (["P1", "P2"], False),
+    (["P1", "D1", "D1"], False),
+    ([], True),
+    (["P1", "P1", "D1"], False),
+    (["P1", "P1", "D1", "D1"], False),
+    (["P1", "D1", "P1"], False),
+    (["P1", "D1", "P1", "D1"], False)
+]
+
+for seq, expected in test_cases:
+    result = is_valid_sequence(seq)
+    print(f"Sequence: {seq} - Valid: {result} (Expected: {expected})")
+
+```
