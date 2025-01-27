@@ -578,7 +578,7 @@ def max_profit_two_orders(start_time, end_time, d_starts, d_ends, d_pays):
                 last_non_conflicting = j
                 break
         dp_one[i] = max(dp_one[i-1], p + dp_one[last_non_conflicting])
-        dp_two[i] = max(dp_two[i-1], p + dp_two[last_non_conflicting], p + dp_one[last_non_conflicting] + dp_one[i-1] - dp_one[j])
+        dp_two[i] = max(dp_two[i-1], p + dp_two[last_non_conflicting], p + dp_one[last_non_conflicting] + dp_one[i-1] - dp_one[last_non_conflicting])
 
     return dp_two[n]
 
