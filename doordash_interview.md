@@ -118,7 +118,7 @@ def shortest_path_check(g_nodes, starts, ends, weights):
         adj[starts[i]].append((ends[i], weights[i], i))
         adj[ends[i]].append((starts[i], weights[i], i))
         edges.append((starts[i], ends[i]))
-
+    # to facilitate 1-index take one more space
     dist = [float('inf')] * (g_nodes + 1)
     dist[1] = 0
     paths = [[] for _ in range(g_nodes + 1)]
@@ -131,16 +131,22 @@ def shortest_path_check(g_nodes, starts, ends, weights):
             continue
 
         for v, w, edge_index in adj[u]:
+            # if we found a new shortest path, need to change 
+            # path from u-v instead of previous path to here
             if dist[v] > dist[u] + w:
                 dist[v] = dist[u] + w
+                # create new path here for v and then add all from start to u
+                # or path of u
                 paths[v] = []
                 for path in paths[u]:
                     paths[v].append(path + [edge_index])
                 heapq.heappush(pq, (dist[v], v))
             elif dist[v] == dist[u] + w:
+                # if both path is correct, then add all nodes of both path or 
+                # append all edges to path of v
                 for path in paths[u]:
                     paths[v].append(path + [edge_index])
-    
+    # now chose the path for reaching to g_nodes
     shortest_paths = paths[g_nodes]
     shortest_path_edges = set()
     if shortest_paths:
