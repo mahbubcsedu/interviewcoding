@@ -654,3 +654,130 @@ print(get_similar_items(items, item, N))  # Output: [1, 2, 3, 4]
 
 ```
 
+## valid arrangment
+DoorDash wants to map out aisles in supermarkets.
+
+Our sensors give us incomplete information. Use the information to count up all possible arrangements for each aisle. the first array represents the combination of contiguous food items we can have. the second array represents the aisle of food items where F is food item, ? is empty spot where we can add either F (Food) or W (water), and W is water
+
+```
+Ex 1
+
+[1,2] [?,F,?,W,W,?,?] is 1 because of the candidates
+
+So in this example there is only 1 combination resulting array because we already have 1 Food Item at the start and we can add 2 Food items at end.
+
+WFWWWFF
+
+[1,1] [?,F,?,W,W,?,?] is 2 because of the candidates
+
+WFWWWFW
+
+WFWWWWF
+```
+
+[leetcode link](https://leetcode.com/playground/CA2JaT69)
+
+```python
+def count_arrangements(required_food_counts, aisle):
+    
+    n = len(aisle)
+    m = len(required_food_counts)
+    unknowns = aisle.count('?')
+
+    def is_valid(arrangement):
+        """Checks if an arrangement is valid given the food groups."""
+        food_count = 0
+        group_index = 0
+        current_group_size = 0
+
+        for item in arrangement:
+            if item == 'F':
+                current_group_size += 1
+            else:  # Item is 'W'
+                if current_group_size > 0:
+                    if group_index >= m or current_group_size != required_food_counts[group_index]:
+                        return False
+                    group_index += 1
+                    current_group_size = 0
+
+        # Crucial fix: Check for remaining group after the loop
+        if current_group_size > 0:
+            if group_index >= m or current_group_size != required_food_counts[group_index]:
+                return False
+            group_index += 1
+
+        return group_index == m  # Check if all groups have been matched
+    
+    
+    def backtrack(i, remaining, curr_arr):
+        
+        if i >= len(aisle):
+            if is_valid(curr_arr.copy()):
+                combinations.append(curr_arr.copy())
+            return
+
+        if i >= len(aisle):
+            return
+
+        if aisle[i] == '?':
+            curr_arr[i] = 'F'
+            backtrack(i + 1, remaining - 1, curr_arr)
+            curr_arr[i] = 'W'
+            backtrack(i + 1, remaining, curr_arr)
+            curr_arr[i] = '?'
+        else:
+            if aisle[i]=="F":
+                backtrack(i+1, remaining-1, curr_arr)
+            else:
+                backtrack(i + 1, remaining, curr_arr)
+
+    for count in required_food_counts:
+        combinations = []
+        current_arrangement = aisle.copy()
+        backtrack(0, count, current_arrangement)
+        
+        print(f"Required Food Count {count}: {len(combinations)} Valid Arrangements")
+        return len(combinations)
+
+# Example Usage
+count_arrangements([1, 2], ['?', 'F', '?', 'W', 'W', '?', '?'])
+count_arrangements([1, 1], ['?', 'F', '?', 'W', 'W', '?', '?'])
+
+# Example usages (including the failing cases)
+food_groups1 = [1, 2]
+aisle1 = ['?', 'F', '?', 'W', 'W', '?', '?']
+result1 = count_arrangements(food_groups1, aisle1)
+print(f"Example 1: {result1}")  # Output: 1
+
+food_groups2 = [1, 1]
+aisle2 = ['?', 'F', '?', 'W', 'W', '?', '?']
+result2 = count_arrangements(food_groups2, aisle2)
+print(f"Example 2: {result2}")  # Output: 2
+
+food_groups3 = [2,1]
+aisle3 = ['?','?','W','?']
+result3 = count_arrangements(food_groups3,aisle3)
+print(f"Example 3: {result3}") # Output 1
+
+food_groups4 = [1,1,1]
+aisle4 = ['?','?','?']
+result4 = count_arrangements(food_groups4,aisle4)
+print(f"Example 4: {result4}") # Output 0
+
+food_groups5 = [1,2]
+aisle5 = ['?','?','?']
+result5 = count_arrangements(food_groups5,aisle5)
+print(f"Example 5: {result5}") # Output 0
+
+food_groups6 = [1,1]
+aisle6 = ['?','W','?','F','?']
+result6 = count_arrangements(food_groups6,aisle6)
+print(f"Example 6: {result6}") # Output 1
+
+food_groups7 = [2]
+aisle7 = ['?','?','?']
+result7 = count_arrangements(food_groups7,aisle7)
+print(f"Example 7: {result7}") # Output 2
+
+```
+
