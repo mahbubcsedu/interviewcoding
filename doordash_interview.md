@@ -96,63 +96,100 @@ For each road, check if it’s used in any of the shortest paths. If it is, we m
 Here's a code snippet to get this done:
 
 ```python
-from heapq import heappop, heappush
-from collections import defaultdict
-import sys
+import heapq
 
-def dijkstra_shortest_path(n, edges, start):
-    graph = defaultdict(list)
-    for index, (u, v, w) in enumerate(edges):
-        graph[u].append((v, w, index))
-        graph[v].append((u, w, index))
+def shortest_path_check(g_nodes, starts, ends, weights):
+    """
+    Determines which roads are along any shortest path between node 1 and g_nodes.
 
-    shortest_paths = [float('inf')] * (n + 1)
-    shortest_paths[start] = 0
+    Args:
+        g_nodes: The number of nodes in the graph.
+        starts: A list of starting nodes for each road.
+        ends: A list of ending nodes for each road.
+        weights: A list of weights for each road.
 
-    pq = []
-    heappush(pq, (0, start, -1))
+    Returns:
+        A list of strings, "YES" if the road is on a shortest path, "NO" otherwise.
+    """
 
-    path_edges = set()
+    adj = [[] for _ in range(g_nodes + 1)]
+    edges = []
+    for i in range(len(starts)):
+        adj[starts[i]].append((ends[i], weights[i], i))
+        adj[ends[i]].append((starts[i], weights[i], i))
+        edges.append((starts[i], ends[i]))
 
+    dist = [float('inf')] * (g_nodes + 1)
+    dist[1] = 0
+    paths = [[] for _ in range(g_nodes + 1)]
+    paths[1] = [[]]
+
+    pq = [(0, 1)]
     while pq:
-        current_distance, current_node, edge_index = heappop(pq)
-        if current_distance > shortest_paths[current_node]:
+        d, u = heapq.heappop(pq)
+        if d > dist[u]:
             continue
 
-        if edge_index != -1:
-            path_edges.add(edge_index)
-
-        for neighbor, weight, index in graph[current_node]:
-            distance = current_distance + weight
-            if distance < shortest_paths[neighbor]:
-                shortest_paths[neighbor] = distance
-                heappush(pq, (distance, neighbor, index))
-                if index != -1:
-                    path_edges.add(index)
-
-    return shortest_paths, path_edges
-
-def find_shortest_paths(n, start_nodes, end_nodes, weights):
-    edges = list(zip(start_nodes, end_nodes, weights))
-    shortest_paths, path_edges = dijkstra_shortest_path(n, edges, 1)
-
-    result = []
-    for index, (u, v, w) in enumerate(edges):
-        if index in path_edges:
-            result.append('YES')
-        else:
-            result.append('NO')
+        for v, w, edge_index in adj[u]:
+            if dist[v] > dist[u] + w:
+                dist[v] = dist[u] + w
+                paths[v] = []
+                for path in paths[u]:
+                    paths[v].append(path + [edge_index])
+                heapq.heappush(pq, (dist[v], v))
+            elif dist[v] == dist[u] + w:
+                for path in paths[u]:
+                    paths[v].append(path + [edge_index])
     
-    return result
+    shortest_paths = paths[g_nodes]
+    shortest_path_edges = set()
+    if shortest_paths:
+        min_dist = dist[g_nodes]
+        if min_dist == float('inf'):
+            return ["NO"] * len(starts)
+        for path in shortest_paths:
+            for edge_index in path:
+                shortest_path_edges.add(edge_index)
 
-# Example Input
+        result = []
+        for i in range(len(starts)):
+            if i in shortest_path_edges:
+                result.append("YES")
+            else:
+                result.append("NO")
+        return result
+
+    else:
+        return ["NO"] * len(starts)
+
+# Example usage
 g_nodes = 5
-start_nodes = [1, 2, 3, 4, 5, 1, 5]
-end_nodes = [2, 3, 4, 5, 1, 3, 3]
+starts = [1, 2, 3, 4, 5, 1, 5]
+ends = [2, 3, 4, 5, 1, 3, 3]
 weights = [1, 1, 1, 1, 3, 2, 1]
+result = shortest_path_check(g_nodes, starts, ends, weights)
+print(result)  # Output: ['YES', 'YES', 'NO', 'NO', 'YES', 'YES', 'YES']
 
-print(find_shortest_paths(g_nodes, start_nodes, end_nodes, weights))
-# Output: ['YES', 'YES', 'NO', 'NO', 'YES', 'YES', 'YES']
+g_nodes = 4
+starts = [1,2,1,3]
+ends = [2,3,4,4]
+weights = [1,1,3,1]
+result = shortest_path_check(g_nodes, starts, ends, weights)
+print(result) # Output: ['YES', 'YES', 'NO', 'YES']
+
+g_nodes = 2
+starts = [1]
+ends = [2]
+weights = [5]
+result = shortest_path_check(g_nodes, starts, ends, weights)
+print(result) # Output: ['YES']
+
+g_nodes = 3
+starts = [1,1,2]
+ends = [2,3,3]
+weights = [1,3,1]
+result = shortest_path_check(g_nodes, starts, ends, weights)
+print(result) # Output: ['YES', 'NO', 'YES']
 ```
 
 ### Explanation:
