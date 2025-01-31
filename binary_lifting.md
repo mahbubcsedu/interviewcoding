@@ -90,4 +90,104 @@ print(bl.get_kth_ancestor(4, 2))  # Output should be 0, as the 2nd ancestor of 4
 3. **Finding k-th Ancestor**:
    - Check each bit in `k`. If a bit is set, jump to the corresponding ancestor.
 
-This method ensures that we can find the k-th ancestor in O(log n) time. Let me know if you have any questions or need further clarification!
+Sure! Let's perform a dry run of the Binary Lifting algorithm with a specific example. We'll fill out the ancestor array and then use it to find a k-th ancestor.
+
+### Example Tree
+
+Consider the following tree:
+
+```
+    0
+   / \
+  1   2
+ /|   |
+3 4   5
+```
+
+In this tree:
+- The root is `0`.
+- Node `0` has children `1` and `2`.
+- Node `1` has children `3` and `4`.
+- Node `2` has child `5`.
+
+The parent array for this tree is:
+```python
+parent = [-1, 0, 0, 1, 1, 2]
+```
+
+### Step-by-Step Dry Run
+
+#### Step 1: Initialization
+We need to create an array `ancestor` where `ancestor[i][j]` represents the 2^j-th ancestor of node `i`.
+
+Let's consider the maximum step (`step = 3`), i.e., we are considering up to 2^2 = 4-th ancestors. Therefore, we will have a 2D array `ancestor` of size `n x step`.
+
+Initial `ancestor` table:
+```
+ancestor = [
+    [-1, -1, -1],  # for node 0
+    [ 0, -1, -1],  # for node 1
+    [ 0, -1, -1],  # for node 2
+    [ 1, -1, -1],  # for node 3
+    [ 1, -1, -1],  # for node 4
+    [ 2, -1, -1]   # for node 5
+]
+```
+
+#### Step 2: Filling the `ancestor` Table
+Fill in the 2^j-th ancestors using the relation:
+```
+ancestor[i][j] = ancestor[ancestor[i][j-1]][j-1]
+```
+
+**For j = 1**:
+```
+ancestor = [
+    [-1, -1, -1],  # for node 0
+    [ 0, -1, -1],  # for node 1 (0's ancestor is -1)
+    [ 0, -1, -1],  # for node 2 (0's ancestor is -1)
+    [ 1,  0, -1],  # for node 3 (1's ancestor is 0)
+    [ 1,  0, -1],  # for node 4 (1's ancestor is 0)
+    [ 2,  0, -1]   # for node 5 (2's ancestor is 0)
+]
+```
+
+**For j = 2**:
+```
+ancestor = [
+    [-1, -1, -1],  # for node 0
+    [ 0, -1, -1],  # for node 1 (no 4-th ancestor)
+    [ 0, -1, -1],  # for node 2 (no 4-th ancestor)
+    [ 1,  0, -1],  # for node 3 (3rd ancestor is 0)
+    [ 1,  0, -1],  # for node 4 (3rd ancestor is 0)
+    [ 2,  0, -1]   # for node 5 (3rd ancestor is 0)
+]
+```
+
+#### Step 3: Finding the k-th Ancestor
+Use the filled `ancestor` table to find the k-th ancestor. Let's find the 3rd ancestor of node `4`.
+
+- Start with `node = 4`, `k = 3`.
+- Convert `k` to its binary form: `3 = 0b011`.
+
+```
+1. Check `k & (1 << 1)` (for the 2^1-th ancestor):
+   - `k & (1 << 1)` is true (since 3 in binary is 011).
+   - Move to the 2^1-th ancestor of node 4: `ancestor[4][1]` is 0.
+   - Update `k = k - (1 << 1)` which results in `k = 1`.
+
+2. Check `k & (1 << 0)` (for the 2^0-th ancestor):
+   - `k & (1 << 0)` is true (since 1 in binary is 001).
+   - Move to the 2^0-th ancestor of node 0: `ancestor[0][0]` is -1.
+   - Update `k = k - (1 << 0)` which results in `k = 0`.
+
+The 3rd ancestor of node 4 is -1 (no such ancestor exists).
+```
+
+So, we successfully found that the 3rd ancestor of node 4 does not exist (returned -1).
+
+### Summary
+1. **Initialization**: Create a 2D ancestor table.
+2. **Filling the Table**: Populate the ancestor table using precomputed ancestors.
+3. **Finding the Ancestor**: Use binary lifting to quickly find the k-th ancestor.
+
