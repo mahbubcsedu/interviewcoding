@@ -104,3 +104,57 @@ print(min_total_cost(D, R))  # Output: 14
 
 In this function, we iterate through each departure day `i` and for each `i`, we iterate through each return day `j` starting from `i`. We calculate the total cost for each combination and keep track of the minimum total cost found.
 
+## Find kth largest elements when k is zero based
+Sure! The Quickselect algorithm is an efficient way to find the k-th largest element in an unsorted array. Quickselect works similarly to Quicksort, but it only partially sorts the array to find the desired element.
+
+Here's the Python implementation to find the k-th largest element using Quickselect, where k is zero-based (i.e., k=0 finds the largest element, k=1 finds the second largest element, and so on):
+
+```python
+import random
+
+def partition(nums, left, right):
+    pivot_index = random.randint(left, right)
+    pivot_value = nums[pivot_index]
+    nums[pivot_index], nums[right] = nums[right], nums[pivot_index]
+    store_index = left
+    
+    for i in range(left, right):
+        if nums[i] > pivot_value:
+            nums[store_index], nums[i] = nums[i], nums[store_index]
+            store_index += 1
+    
+    nums[right], nums[store_index] = nums[store_index], nums[right]
+    return store_index
+
+def quickselect(nums, left, right, k):
+    if left == right:
+        return nums[left]
+    
+    pivot_index = partition(nums, left, right)
+    
+    if k == pivot_index:
+        return nums[k]
+    elif k < pivot_index:
+        return quickselect(nums, left, pivot_index - 1, k)
+    else:
+        return quickselect(nums, pivot_index + 1, right, k)
+
+def findKthLargest(nums, k):
+    return quickselect(nums, 0, len(nums) - 1, k)
+
+# Example usage:
+nums = [3, 2, 1, 5, 6, 4]
+k = 2  # Find the 3rd largest element (zero-based index)
+print(findKthLargest(nums, k))  # Output: 4
+```
+
+### Explanation:
+1. **Partition Function**: The `partition` function selects a random pivot element and partitions the array such that all elements greater than the pivot are on the left, and all elements less than or equal to the pivot are on the right.
+2. **Quickselect Function**: The `quickselect` function uses the `partition` function to recursively narrow down the search space to find the k-th largest element.
+   - If the pivot index is equal to k, we have found the k-th largest element.
+   - If k is less than the pivot index, we continue the search in the left subarray.
+   - If k is greater than the pivot index, we continue the search in the right subarray.
+3. **Find K-th Largest Function**: The `findKthLargest` function initializes the `quickselect` function with the entire array.
+
+This implementation ensures an efficient way to find the k-th largest element with an average time complexity of \(O(n)\).
+
