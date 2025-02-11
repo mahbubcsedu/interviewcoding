@@ -103,6 +103,47 @@ print(min_total_cost(D, R))  # Output: 14
 ```
 
 In this function, we iterate through each departure day `i` and for each `i`, we iterate through each return day `j` starting from `i`. We calculate the total cost for each combination and keep track of the minimum total cost found.
+## Find kth largest elements when k is 1-based
+```python
+import random
+class Solution:
+    
+
+    def partition(self, nums, left, right):
+        pivot_index = random.randint(left, right)
+        pivot_value = nums[pivot_index]
+        nums[pivot_index], nums[right] = nums[right], nums[pivot_index]
+        store_index = left
+        
+        for i in range(left, right):
+            if nums[i] > pivot_value:
+                nums[store_index], nums[i] = nums[i], nums[store_index]
+                store_index += 1
+        
+        nums[right], nums[store_index] = nums[store_index], nums[right]
+        return store_index
+
+    def quickselect(self, nums, left, right, k):
+        if left == right:
+            return nums[left]
+        
+        pivot_index = self.partition(nums, left, right)
+        
+        if k == pivot_index:
+            return nums[k]
+        elif k < pivot_index:
+            return self.quickselect(nums, left, pivot_index - 1, k)
+        else:
+            return self.quickselect(nums, pivot_index + 1, right, k)
+
+    def findKthLargest(self, nums, k):
+        return self.quickselect(nums, 0, len(nums) - 1, k-1)
+
+# Example usage:
+nums = [3, 2, 1, 5, 6, 4]
+k = 2  # Find the 3rd largest element (zero-based index)
+print(Solution().findKthLargest(nums, k))  # Output: 4
+```
 
 ## Find kth largest elements when k is zero based
 Sure! The Quickselect algorithm is an efficient way to find the k-th largest element in an unsorted array. Quickselect works similarly to Quicksort, but it only partially sorts the array to find the desired element.
