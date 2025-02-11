@@ -16,7 +16,28 @@ I took this feedback to heart and have since made a conscious effort to involve 
 ## did you ever had a diaagrement
 Answering a question about a disagreement you've had at work can be a great opportunity to show your ability to handle conflicts professionally, collaborate effectively, and prioritize the project's success. Here's a structured way to present your answer:
 
+## Another example
+Answering a question about a disagreement effectively can highlight your problem-solving skills, ability to communicate, and willingness to collaborate. Here's a structured way to present your answer using the given example:
+
 ---
+
+**Answer:**
+
+Yes, I have experienced disagreements at work, and one notable example involved our validation and verification (V&V) process for software.
+
+During this process, some team members suggested including a large number of integration tests that involved repeated tests of creating different FHIR resources. They proposed creating 139 different types of FHIR resources for integration testing, believing it was necessary to cover all possible scenarios. They also wanted to implement and execute edge case and different condition tests using integration tests.
+
+I believed that this approach would be inefficient and lead to several issues. Adding all these tests would make the test suite excessively heavy, causing it to run for days. This, in turn, led to problems such as AWS account timeouts, auth token timeouts, high resource utilization, and significantly longer V&V times. I also noted that many of these tests were already covered by our unit tests, which were more suitable for testing individual conditions and edge cases.
+
+I proposed that we should focus our integration tests on validating functional requirements and ensuring end-to-end functionality. I suggested a more efficient approach:
+1. **Limit Integration Tests**: Focus on critical paths and scenarios that validate functional requirements without redundant tests.
+2. **Unit Tests for Edge Cases**: Continue using unit tests to cover various conditions and edge cases, as they are faster and more efficient.
+3. **Performance Testing**: Include a set of performance tests to cover load and stress tests, ensuring the system can handle high traffic and usage.
+
+After discussing these points with the team and demonstrating the potential impact of an overloaded test suite, we reached a consensus. We restructured our test plan to include essential integration tests and comprehensive unit tests. This approach allowed us to complete the V&V process more efficiently, without encountering the issues we faced earlier.
+
+This experience taught me the importance of prioritizing efficiency, clear communication, and collaboration to achieve the best outcomes for the project.
+
 
 **Answer:**
 
