@@ -199,3 +199,48 @@ print(findKthLargest(nums, k))  # Output: 4
 
 This implementation ensures an efficient way to find the k-th largest element with an average time complexity of \(O(n)\).
 
+## 560 subarray sum equal k
+-When dealing with the problem of finding the number of subarrays that sum to a given value \(k\), if the numbers provided are positive only, we can make significant improvements to the algorithm. Specifically, we can use a sliding window technique to achieve a more efficient solution.
+
+### Sliding Window Approach
+
+In this case, since all numbers are positive, the sum of the subarray will only increase as we add more elements to it. This allows us to use a sliding window approach to maintain a valid subarray whose sum is equal to \(k\).
+
+Here’s the Python implementation:
+
+```python
+def subarraySum(nums, k):
+    start, end = 0, 0
+    current_sum = 0
+    count = 0
+
+    while end < len(nums):
+        # Add the current element to the current_sum
+        current_sum += nums[end]
+
+        # Move the start pointer to the right while the current_sum is greater than k
+        while current_sum > k and start <= end:
+            current_sum -= nums[start]
+            start += 1
+
+        # If current_sum equals k, increment the count
+        if current_sum == k:
+            count += 1
+
+        # Move the end pointer to the right
+        end += 1
+
+    return count
+
+# Example usage:
+nums = [1, 2, 3, 4, 5]
+k = 5
+print(subarraySum(nums, k))  # Output: 2 (subarrays are [2, 3] and [5])
+```
+
+### Explanation:
+1. **Initialization**: Initialize `start` and `end` pointers, `current_sum` to keep track of the sum of elements in the window, and `count` to keep track of the number of subarrays that sum to \(k\).
+2. **Expanding the Window**: Incrementally add elements to `current_sum` using the `end` pointer.
+3. **Shrinking the Window**: If `current_sum` exceeds \(k\), increment the `start` pointer and subtract elements from `current_sum` until `current_sum` is less than or equal to \(k\).
+4. **Counting Subarrays**: If `current_sum` equals \(k\), increment the `count`.
+5. **Moving the End Pointer**: Continue expanding the window by moving the `end` pointer to the right.
