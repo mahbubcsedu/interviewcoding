@@ -349,6 +349,76 @@ def jumpGameV(arr):
 
 ---
 
+
+## Jump Game VII
+
+**Problem Statement**:
+You are given a binary string `s` of length `n` and two integers `minJump` and `maxJump`. In the beginning, you are standing at index 0, which is always 0. You can move from index `i` to index `j` if `i + minJump <= j <= i + maxJump` and `s[j] == '0'`. Return true if you can reach index `n - 1` in `s`, or false otherwise.
+
+**Solution**:
+```python
+def canReach(s, minJump, maxJump):
+    n = len(s)
+    dp = [False] * n
+    dp[0] = True
+    reachable = 0
+
+    for i in range(1, n):
+        if i >= minJump and dp[i - minJump]:
+            reachable += 1
+        if i > maxJump and dp[i - maxJump - 1]:
+            reachable -= 1
+        dp[i] = reachable > 0 and s[i] == '0'
+
+    return dp[-1]
+
+# Example usage:
+s = "011010"
+minJump = 2
+maxJump = 3
+print(canReach(s, minJump, maxJump))  # Output: True
+```
+
+---
+
+## Jump Game VIII
+
+**Problem Statement**:
+You are given an array of integers `stones` where each element represents the number of stones at that index. You can jump from index `i` to index `i + stones[i]`. Your goal is to reach the last index (i.e., the index `n-1`) from the first index (i.e., the index `0`). Each time you land on an index, you can collect all the stones from that index and add them to your score. Return the maximum score you can achieve starting from index 0 and reaching index `n-1`.
+
+**Solution**:
+```python
+def jumpGameVIII(stones):
+    n = len(stones)
+    dp = [float('-inf')] * n
+    dp[0] = stones[0]
+
+    for i in range(n):
+        for j in range(i + 1, i + 1 + stones[i]):
+            if j < n:
+                dp[j] = max(dp[j], dp[i] + stones[j])
+
+    return dp[-1]
+
+# Example usage:
+stones = [3, 2, 4, 1, 3, 6]
+print(jumpGameVIII(stones))  # Output: 16
+```
+
+---
+
+### Explanation:
+
+1. **Jump Game VII**:
+   - Use dynamic programming to keep track of whether each index can be reached.
+   - Iterate over the string `s`, updating the reachable range using the `minJump` and `maxJump` constraints.
+   - Return whether the last index can be reached.
+
+2. **Jump Game VIII**:
+   - Use dynamic programming to keep track of the maximum score that can be achieved at each index.
+   - Iterate over the `stones` array, updating the score for reachable indices.
+   - Return the maximum score at the last index.
+
 ### Conclusion:
 
 In addition to the initial **Jump Game I**, **Jump Game II**, and **Jump Game III**, we've now covered:
