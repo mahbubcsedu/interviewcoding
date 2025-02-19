@@ -1,7 +1,3 @@
-Here is a wiki page with the problems and their solutions for the Stone Game series:
-
----
-
 # Stone Game Series Wiki
 
 ## 1. 877. Stone Game
@@ -205,6 +201,3 @@ def stoneGameIX(piles):
     return abs(count[1] - count[2]) > 2
 ```
 
----
-
-Feel free to refer to the example solutions for each problem. Let me know if you have any further questions or need additional assistance! 😊
