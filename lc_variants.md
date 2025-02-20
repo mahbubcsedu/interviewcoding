@@ -604,6 +604,32 @@ In this implementation:
 - Finally, we remove any trailing zeros in the decimal part and combine the integer and decimal parts to form the final result.
 
 
+## Find cheese using api
+Given a mouse with 2 APIs in a maze. Design an algorithm to find a cheese in the maze using only the 2 given APIs shown below.
+
+
+```
+class Mouse {
+
+	/**
+	* Moves to one of the directions (left, right, up, down) and returns false if you can't move and true if you can.
+	*/
+	public boolean move(Direction direction);
+
+	/**
+	* Returns true if there is a cheese in the current cell.
+	*/
+	public boolean hasCheese();
+
+	/**
+	* Should return true and leave the mouse at that location or false if we can't find cheese and return the mouse back to where it started.
+	*/
+	public boolean getCheese() {
+		// your code goes here
+	}
+}
+```
+
 You can solve this problem by implementing a depth-first search (DFS) algorithm. This algorithm will explore the maze by moving in all four possible directions (left, right, up, down) until the mouse finds the cheese or all possibilities are exhausted. To avoid getting stuck in a loop, the mouse should mark the cells it has already visited.
 
 Here’s a Python implementation of the algorithm:
