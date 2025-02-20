@@ -244,3 +244,65 @@ print(subarraySum(nums, k))  # Output: 2 (subarrays are [2, 3] and [5])
 3. **Shrinking the Window**: If `current_sum` exceeds \(k\), increment the `start` pointer and subtract elements from `current_sum` until `current_sum` is less than or equal to \(k\).
 4. **Counting Subarrays**: If `current_sum` equals \(k\), increment the `count`.
 5. **Moving the End Pointer**: Continue expanding the window by moving the `end` pointer to the right.
+
+
+
+### Problem Statement: (variant of max consecutive ones)
+Given a list of days represented as "W" (Weekdays) and "H" (Holidays) and a number `k`, representing the maximum number of weekdays you can convert to holidays, find the maximum number of consecutive holidays you can achieve.
+
+### Solution:
+
+1. **Initialize Variables**:
+   - Use two pointers (`left` and `right`) to maintain the sliding window.
+   - Keep track of the count of weekdays that have been converted to holidays (`current_k`).
+
+2. **Sliding Window**:
+   - Expand the window by moving the `right` pointer and increment `current_k` when a weekday is encountered.
+   - If `current_k` exceeds `k`, move the `left` pointer to reduce the window size until `current_k` is less than or equal to `k`.
+   - Track the maximum window size.
+
+Here's a Python implementation of the solution:
+
+```python
+def maxConsecutiveHolidays(days, k):
+    left = 0
+    current_k = 0
+    max_consecutive = 0
+
+    for right in range(len(days)):
+        if days[right] == 'W':
+            current_k += 1
+
+        while current_k > k:
+            if days[left] == 'W':
+                current_k -= 1
+            left += 1
+        
+        max_consecutive = max(max_consecutive, right - left + 1)
+    
+    return max_consecutive
+
+# Example usage:
+days = ["W", "H", "W", "W", "H", "W", "H", "W", "H", "H", "W"]
+k = 2
+print(maxConsecutiveHolidays(days, k))  # Output: 7
+```
+
+### Explanation:
+
+1. **Initialize Pointers and Counters**:
+   - `left` and `right` are pointers used to maintain the window.
+   - `current_k` keeps track of the number of weekdays that have been converted to holidays within the window.
+
+2. **Expand the Window**:
+   - Move the `right` pointer to expand the window.
+   - Increment `current_k` whenever a weekday ('W') is encountered.
+
+3. **Shrink the Window**:
+   - If `current_k` exceeds `k`, move the `left` pointer to shrink the window until `current_k` is less than or equal to `k`.
+
+4. **Track Maximum Window Size**:
+   - Update `max_consecutive` with the maximum size of the window observed.
+
+5. **Example Usage**:
+   - For the given `days` list and `k = 2`, the output is `7`, which is the maximum number of consecutive holidays you can achieve by converting up to 2 weekdays to holidays.
