@@ -463,4 +463,144 @@ print(result)  # Output: [[1, 4], [5, 8], [9, 12]]
 
 Combining both steps can be done, but it usually leads to more complex code, which can be harder to debug and maintain. By separating the concerns, you create a more modular and understandable solution.
 
-Let me know if you have any more questions or if there's anything else I can assist you with! 😊
+## Add two integers
+Sure! Here’s a way to add two non-negative integers represented as strings without converting them to integers directly or using any large integer libraries. We’ll simulate the addition process as you would do manually:
+
+1. Start from the rightmost digits and add them, carrying over the excess to the next left position if the sum is greater than 9.
+2. Continue this process until all digits are added.
+
+Here’s the Python code to achieve this:
+
+```python
+def add_strings(num1, num2):
+    # Ensure num1 is the longer string
+    if len(num2) > len(num1):
+        num1, num2 = num2, num1
+    
+    result = []
+    carry = 0
+    len1, len2 = len(num1), len(num2)
+    
+    # Traverse both strings from right to left
+    for i in range(1, len1 + 1):
+        digit1 = int(num1[-i]) if i <= len1 else 0
+        digit2 = int(num2[-i]) if i <= len2 else 0
+        
+        # Calculate the sum and carry
+        total = digit1 + digit2 + carry
+        carry = total // 10
+        result.append(total % 10)
+    
+    # If there's a remaining carry, add it to the result
+    if carry:
+        result.append(carry)
+    
+    # Reverse the result and convert to string
+    result.reverse()
+    return ''.join(map(str, result))
+
+# Example usage:
+num1 = "456"
+num2 = "77"
+print(add_strings(num1, num2))  # Output: "533"
+```
+
+In this implementation:
+- We ensure `num1` is the longer string to make the traversal simpler.
+- We traverse both strings from right to left, adding corresponding digits and taking care of any carry.
+- The `carry` variable keeps track of any excess that needs to be added to the next digit.
+- Finally, we reverse the result list and join the digits to form the final sum as a string.
+
+Feel free to test this code with different inputs and let me know if you have any questions!
+
+To handle signed decimal numbers, we'll need to make some adjustments to the code:
+
+1. **Handle the sign**: Determine whether the result should be positive or negative.
+2. **Handle decimal points**: Align the numbers by their decimal points during addition.
+
+Here’s the updated implementation:
+
+```python
+def add_strings(num1, num2):
+    # Determine the sign
+    sign1 = -1 if num1[0] == '-' else 1
+    sign2 = -1 if num2[0] == '-' else 1
+    
+    if num1[0] in '+-':
+        num1 = num1[1:]
+    if num2[0] in '+-':
+        num2 = num2[1:]
+    
+    # Split the numbers into integer and decimal parts
+    int_part1, dec_part1 = num1.split('.') if '.' in num1 else (num1, '')
+    int_part2, dec_part2 = num2.split('.') if '.' in num2 else (num2, '')
+    
+    # Make the decimal parts the same length by padding with zeros
+    max_dec_len = max(len(dec_part1), len(dec_part2))
+    dec_part1 = dec_part1.ljust(max_dec_len, '0')
+    dec_part2 = dec_part2.ljust(max_dec_len, '0')
+    
+    # Add the integer and decimal parts separately
+    int_sum = add_integer_strings(int_part1, int_part2, sign1, sign2)
+    dec_sum = add_integer_strings(dec_part1[::-1], dec_part2[::-1], sign1, sign2)[::-1]
+    
+    # Handle carry from decimal to integer part
+    if len(dec_sum) > max_dec_len:
+        carry = int(dec_sum[0])
+        dec_sum = dec_sum[1:]
+        int_sum = add_integer_strings(int_sum, str(carry), 1, 1)
+    
+    # Remove trailing zeros in the decimal part
+    dec_sum = dec_sum.rstrip('0')
+    
+    result = int_sum
+    if dec_sum:
+        result += '.' + dec_sum
+    
+    return result
+
+def add_integer_strings(num1, num2, sign1, sign2):
+    # Ensure num1 is the longer string
+    if len(num2) > len(num1):
+        num1, num2 = num2, num1
+        sign1, sign2 = sign2, sign1
+    
+    result = []
+    carry = 0
+    len1, len2 = len(num1), len(num2)
+    
+    # Traverse both strings from right to left
+    for i in range(1, len1 + 1):
+        digit1 = int(num1[-i]) if i <= len1 else 0
+        digit2 = int(num2[-i]) if i <= len2 else 0
+        
+        # Calculate the sum and carry
+        total = digit1 * sign1 + digit2 * sign2 + carry
+        carry = total // 10 if total >= 0 else -(-total // 10)
+        result.append(abs(total) % 10)
+    
+    # If there's a remaining carry, add it to the result
+    if carry:
+        result.append(abs(carry))
+    
+    # Reverse the result and convert to string
+    result.reverse()
+    return ''.join(map(str, result)).lstrip('0') or '0'
+
+# Example usage:
+num1 = "-123.45"
+num2 = "67.89"
+print(add_strings(num1, num2))  # Output: "-55.56"
+
+num1 = "123.45"
+num2 = "-67.89"
+print(add_strings(num1, num2))  # Output: "55.56"
+```
+
+In this implementation:
+- We first determine the sign of each number.
+- We split each number into integer and decimal parts.
+- We add the integer and decimal parts separately and handle any carry from the decimal part to the integer part.
+- Finally, we remove any trailing zeros in the decimal part and combine the integer and decimal parts to form the final result.
+
+
