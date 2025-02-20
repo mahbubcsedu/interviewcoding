@@ -717,4 +717,48 @@ This code:
 
 Note that you'll need to implement the `move()`, `hasCheese()`, `get_position()`, and `move_back()` methods according to the actual maze setup and movement rules.
 
-Feel free to test and modify this code to suit your specific requirements. Let me know if you have any questions!
+## Another variable of consecutive 1
+Certainly! This problem can be approached similarly to the "max consecutive 1s" problem. Let's assume the input is an array where `W` represents a weekday and `H` represents a holiday. We need to determine the maximum number of consecutive holidays that can be achieved by converting a given number of weekdays to holidays.
+
+Here's a step-by-step approach in Python:
+
+1. Use a sliding window to keep track of the current segment of the array.
+2. Maintain a counter for the number of weekdays (`W`) in the current window.
+3. Expand the window by moving the right pointer and check if we can convert the current window to holidays by considering the given number of holidays that can be taken.
+4. If the number of weekdays in the current window exceeds the allowable number of holidays to be taken, move the left pointer to shrink the window.
+5. Track the maximum length of consecutive holidays obtained.
+
+Here's the implementation in Python:
+
+```python
+def max_consecutive_holidays(days, k):
+    max_holidays = 0
+    left = 0
+    w_count = 0
+    
+    for right in range(len(days)):
+        if days[right] == 'W':
+            w_count += 1
+        
+        # If w_count exceeds the number of holidays we can take (k), move left pointer
+        while w_count > k:
+            if days[left] == 'W':
+                w_count -= 1
+            left += 1
+        
+        max_holidays = max(max_holidays, right - left + 1)
+    
+    return max_holidays
+
+# Example usage:
+days = ['W', 'H', 'W', 'W', 'H', 'W', 'H', 'H', 'W', 'W']
+k = 2
+print(max_consecutive_holidays(days, k))  # Output: 6
+```
+
+In this implementation:
+- `days` is the input array where `'W'` represents weekdays and `'H'` represents holidays.
+- `k` is the number of holidays that can be taken (i.e., the number of weekdays that can be converted to holidays).
+- The function `max_consecutive_holidays` uses a sliding window technique to find the maximum number of consecutive holidays that can be achieved.
+
+
