@@ -369,3 +369,98 @@ print(maxConsecutiveOffDays(days, k))  # Output: 9
 5. **Example Usage**:
    - For the given `days` list and `k = 2`, the output is `9`, which is the maximum number of consecutive off days you can achieve by converting up to 2 weekdays to holidays, considering both holidays and PTO.
 
+Merging overlap while merging two lists can be done, but separating the steps (first merging the lists, then merging overlaps) ensures better code organization, readability, and often simplifies debugging. Let's break it down.
+
+### Separate Steps vs. Combined Steps
+
+1. **Separate Steps**:
+   - **Step 1: Merge the two sorted lists** into a single sorted list.
+   - **Step 2: Merge overlapping intervals** in the combined sorted list.
+
+   **Advantages**:
+   - Easier to understand and maintain: Each step does one thing well.
+   - Reduced complexity: Sorting and merging logic are kept separate.
+   - Debugging becomes simpler as errors in merging can be isolated more easily.
+
+2. **Combined Steps**:
+   - **Single Step: Merge and handle overlaps simultaneously**.
+
+   **Challenges**:
+   - Increased complexity: Handling merging and overlaps in one go can make the code harder to follow.
+   - Potential for errors: Integrating multiple concerns can lead to bugs if not handled meticulously.
+   - Maintenance: Future updates might require altering complex, intertwined logic.
+
+### Implementation Example: Separate Steps
+
+#### Step 1: Merge the Sorted Lists
+
+```python
+def mergeSortedLists(sortedIntervals1, sortedIntervals2):
+    # Initialize pointers
+    i, j = 0, 0
+    merged = []
+
+    # Merge the two sorted lists
+    while i < len(sortedIntervals1) and j < len(sortedIntervals2):
+        if sortedIntervals1[i][0] < sortedIntervals2[j][0]:
+            merged.append(sortedIntervals1[i])
+            i += 1
+        else:
+            merged.append(sortedIntervals2[j])
+            j += 1
+
+    # Add remaining intervals
+    while i < len(sortedIntervals1):
+        merged.append(sortedIntervals1[i])
+        i += 1
+    while j < len(sortedIntervals2):
+        merged.append(sortedIntervals2[j])
+        j += 1
+
+    return merged
+```
+
+#### Step 2: Merge Overlapping Intervals
+
+```python
+def mergeOverlappingIntervals(merged):
+    if not merged:
+        return []
+
+    merged_intervals = [merged[0]]
+    for i in range(1, len(merged)):
+        last_interval = merged_intervals[-1]
+        current_interval = merged[i]
+        if current_interval[0] <= last_interval[1]:
+            merged_intervals[-1] = [last_interval[0], max(last_interval[1], current_interval[1])]
+        else:
+            merged_intervals.append(current_interval)
+
+    return merged_intervals
+
+# Example usage:
+sortedIntervals1 = [[1, 3], [5, 7], [9, 12]]
+sortedIntervals2 = [[2, 4], [6, 8], [10, 11]]
+
+# Step 1: Merge the two sorted lists
+merged = mergeSortedLists(sortedIntervals1, sortedIntervals2)
+
+# Step 2: Merge overlapping intervals
+result = mergeOverlappingIntervals(merged)
+print(result)  # Output: [[1, 4], [5, 8], [9, 12]]
+```
+
+### Advantages of Separate Steps:
+
+1. **Clarity**:
+   - Each function has a clear responsibility, making it easier to understand and maintain.
+
+2. **Modularity**:
+   - Functions can be tested individually, ensuring correctness of each step independently.
+
+3. **Debugging**:
+   - Errors can be traced back to a specific step, simplifying the debugging process.
+
+Combining both steps can be done, but it usually leads to more complex code, which can be harder to debug and maintain. By separating the concerns, you create a more modular and understandable solution.
+
+Let me know if you have any more questions or if there's anything else I can assist you with! 😊
