@@ -644,14 +644,45 @@ class Direction:
 class Mouse:
     def __init__(self):
         self.visited = set()
+        self.position = (0, 0)  # Starting position
 
     def move(self, direction):
         # Implement the actual move API here
-        pass
+        # Update the position based on the direction
+        if direction == Direction.LEFT:
+            new_position = (self.position[0], self.position[1] - 1)
+        elif direction == Direction.RIGHT:
+            new_position = (self.position[0], self.position[1] + 1)
+        elif direction == Direction.UP:
+            new_position = (self.position[0] - 1, self.position[1])
+        elif direction == Direction.DOWN:
+            new_position = (self.position[0] + 1, self.position[1])
+        else:
+            return False
+
+        # Placeholder for actual move function that returns True or False
+        can_move = True  # This should be replaced by the actual API call
+
+        if can_move:
+            self.position = new_position
+        return can_move
 
     def hasCheese(self):
         # Implement the actual hasCheese API here
         pass
+
+    def get_position(self):
+        return self.position
+
+    def move_back(self, direction):
+        # Move back in the opposite direction
+        opposite_direction = {
+            Direction.LEFT: Direction.RIGHT,
+            Direction.RIGHT: Direction.LEFT,
+            Direction.UP: Direction.DOWN,
+            Direction.DOWN: Direction.UP
+        }
+        return self.move(opposite_direction[direction])
 
     def getCheese(self):
         def dfs():
@@ -669,14 +700,12 @@ class Mouse:
 
         self.visited.add(self.get_position())
         return dfs()
-    
-    def get_position(self):
-        # Implement a method to get the current position of the mouse
-        pass
 
-    def move_back(self, direction):
-        # Implement a method to move back to the previous cell
-        pass
+# Example usage:
+# mouse = Mouse()
+# result = mouse.getCheese()
+# print(result)  # Output will depend on the actual implementation of move() and hasCheese()
+
 ```
 
 This code:
