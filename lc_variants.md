@@ -604,3 +604,62 @@ In this implementation:
 - Finally, we remove any trailing zeros in the decimal part and combine the integer and decimal parts to form the final result.
 
 
+You can solve this problem by implementing a depth-first search (DFS) algorithm. This algorithm will explore the maze by moving in all four possible directions (left, right, up, down) until the mouse finds the cheese or all possibilities are exhausted. To avoid getting stuck in a loop, the mouse should mark the cells it has already visited.
+
+Here’s a Python implementation of the algorithm:
+
+```python
+class Direction:
+    LEFT = 0
+    RIGHT = 1
+    UP = 2
+    DOWN = 3
+
+class Mouse:
+    def __init__(self):
+        self.visited = set()
+
+    def move(self, direction):
+        # Implement the actual move API here
+        pass
+
+    def hasCheese(self):
+        # Implement the actual hasCheese API here
+        pass
+
+    def getCheese(self):
+        def dfs():
+            if self.hasCheese():
+                return True
+
+            for direction in [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN]:
+                if self.move(direction):
+                    if (self.get_position() not in self.visited):
+                        self.visited.add(self.get_position())
+                        if dfs():
+                            return True
+                        self.move_back(direction)  # Move back if not found
+            return False
+
+        self.visited.add(self.get_position())
+        return dfs()
+    
+    def get_position(self):
+        # Implement a method to get the current position of the mouse
+        pass
+
+    def move_back(self, direction):
+        # Implement a method to move back to the previous cell
+        pass
+```
+
+This code:
+- Uses a helper function `dfs()` for the depth-first search.
+- Checks if the current cell has cheese using `self.hasCheese()`.
+- Tries to move in all four possible directions.
+- Marks the cells it has visited to avoid revisiting.
+- Uses a `move_back` method to return to the previous position if no cheese is found in a direction.
+
+Note that you'll need to implement the `move()`, `hasCheese()`, `get_position()`, and `move_back()` methods according to the actual maze setup and movement rules.
+
+Feel free to test and modify this code to suit your specific requirements. Let me know if you have any questions!
