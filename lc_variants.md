@@ -1108,3 +1108,33 @@ In this implementation:
 - The function `find_valley_or_plain` iterates through the array starting from the second element and ending at the second-to-last element.
 - It checks if the current element forms a valley or a plain with its neighbors and appends the triplet to the result list if it does.
 - The function returns a list of all valleys and plains found in the array.
+
+## randomly output index of maximum value
+To randomly output the index of the maximum value in an array, we can first identify all the indices of the maximum value. Then, we can randomly select one of these indices. 
+
+Here's a Python function to achieve this:
+
+```python
+import random
+
+def random_max_index(nums):
+    if not nums:
+        return None
+    
+    max_value = max(nums)
+    max_indices = [i for i, num in enumerate(nums) if num == max_value]
+    
+    return random.choice(max_indices)
+
+# Example usage:
+nums = [1, 3, 2, 3, 1, 3]
+print(random_max_index(nums))  # Output will be randomly one of the indices of 3, which can be 1, 3, or 5
+```
+
+In this implementation:
+- We first check if the array is empty and return `None` if it is.
+- We find the maximum value in the array using the `max` function.
+- We identify all the indices where the maximum value is located using a list comprehension.
+- We randomly select one of these indices using `random.choice`.
+
+
