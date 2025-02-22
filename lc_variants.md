@@ -947,3 +947,40 @@ Combining these steps:
 Overall, the dominant factor depends on the number of islands and their sizes. In the worst case scenario with large grids and many islands, the complexity can approach O((m * n)^2) for distance calculations. However, in practical scenarios with fewer islands, the complexity is often dominated by the grid traversal and MST calculations.
 
 Thus, the overall time complexity can be summarized as approximately O(m * n + k^2 * s^2 + k^2 log k), which in practical cases simplifies to O(m * n).
+
+## Draw circle given a radias
+Certainly! Drawing a circle involves calculating the coordinates of points that lie on the circumference of the circle. Given a radius, we can generate these points using parametric equations of a circle.
+
+The parametric equations for a circle with center `(h, k)` and radius `r` are:
+- \( x = h + r \cos(\theta) \)
+- \( y = k + r \sin(\theta) \)
+
+where \(\theta\) ranges from 0 to \(2\pi\) (or 0 to 360 degrees).
+
+Here's a Python function to generate the coordinates of points that form the circle:
+
+```python
+import math
+
+def draw_circle(radius, center_x=0, center_y=0, num_points=100):
+    points = []
+    for i in range(num_points):
+        theta = 2 * math.pi * i / num_points
+        x = center_x + radius * math.cos(theta)
+        y = center_y + radius * math.sin(theta)
+        points.append((x, y))
+    return points
+
+# Example usage:
+radius = 5
+points = draw_circle(radius)
+for point in points:
+    print(point)
+```
+
+In this implementation:
+- `radius` is the given radius of the circle.
+- `center_x` and `center_y` are the coordinates of the center of the circle (default is the origin `(0, 0)`).
+- `num_points` is the number of points to generate on the circumference (default is 100 for a smooth circle).
+
+The function `draw_circle` calculates the coordinates of `num_points` evenly spaced points on the circumference of the circle and returns them as a list of tuples.
