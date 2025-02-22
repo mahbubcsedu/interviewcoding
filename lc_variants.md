@@ -984,3 +984,61 @@ In this implementation:
 - `num_points` is the number of points to generate on the circumference (default is 100 for a smooth circle).
 
 The function `draw_circle` calculates the coordinates of `num_points` evenly spaced points on the circumference of the circle and returns them as a list of tuples.
+
+
+### Magic hashmap like LRU cache may be
+Sure! Let's implement the `MagicMap` class with the required methods: `get(k)`, `put(k, v)`, and `putall(v)`.
+
+The `putall(v)` method will change all the values in the dictionary to `v`. Unlike an LRU cache, which has specific functionality related to cache eviction policies, this `MagicMap` will primarily focus on managing its key-value pairs and applying batch updates to all values.
+
+Here's the implementation in Python:
+
+```python
+class MagicMap:
+    def __init__(self):
+        self.map = {}
+        self.default_value = None  # Store the value set by putall
+
+    def get(self, k):
+        if k in self.map:
+            return self.map[k]
+        if self.default_value is not None:
+            return self.default_value
+        return None  # Or some other default behavior if the key is not found
+
+    def put(self, k, v):
+        self.map[k] = v
+
+    def putall(self, v):
+        self.default_value = v
+        self.map = {k: v for k in self.map}
+
+# Example usage:
+magic_map = MagicMap()
+
+# Put values into the MagicMap
+magic_map.put('a', 1)
+magic_map.put('b', 2)
+
+# Get values from the MagicMap
+print(magic_map.get('a'))  # Output: 1
+print(magic_map.get('b'))  # Output: 2
+print(magic_map.get('c'))  # Output: None (key not found)
+
+# Use putall to change all values
+magic_map.putall(10)
+
+# Get values after putall
+print(magic_map.get('a'))  # Output: 10
+print(magic_map.get('b'))  # Output: 10
+print(magic_map.get('c'))  # Output: 10 (default value after putall)
+```
+
+In this implementation:
+- The `get(k)` method returns the value associated with key `k` or the default value set by `putall`.
+- The `put(k, v)` method inserts or updates the value associated with key `k`.
+- The `putall(v)` method changes all existing values to `v` and sets a default value for any new keys.
+
+This `MagicMap` class is not similar to an LRU cache, as it does not implement any caching or eviction policies. An LRU (Least Recently Used) cache typically has methods for getting and putting items, with an additional mechanism to evict the least recently used items when the cache reaches its capacity.
+
+
