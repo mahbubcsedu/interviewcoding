@@ -67,3 +67,7 @@ Critical feedback you gave/received
 Disagreement with a manager
 A time you were right but had to convince others etc..
 Used the STAR method whereever possible. Went well!
+
+Tell me about a time you disagreed with a teammate and ended up being wrong
+Tell me about a time you were uncomfortable working with a teammate
+Tell me about a time that where you were unable to make a deadline
