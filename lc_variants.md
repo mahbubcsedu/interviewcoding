@@ -827,3 +827,123 @@ In this implementation:
 - The left subtree is only traversed if the current node's value is greater than `low`.
 - The right subtree is only traversed if the current node's value is less than `high`.
 
+
+### Island variation (min flips to connect all islands) [Very hard]
+To determine the minimum number of cells you need to flip to connect all islands in a grid, you can represent the problem as a graph problem. Here's a high-level approach using Breadth-First Search (BFS) and Minimum Spanning Tree (MST) concepts:
+
+1. **Identify Islands**: Use BFS or Depth-First Search (DFS) to identify and label all the separate islands in the grid.
+2. **Calculate Distance**: For each pair of islands, calculate the minimum number of flips required to connect them.
+3. **Minimum Spanning Tree (MST)**: Use an MST algorithm (like Kruskal's or Prim's) to connect all islands with the minimum total number of flips.
+
+Here’s a Python implementation to illustrate the approach:
+
+```python
+from collections import deque
+
+def bfs(grid, start, visited, island_id):
+    q = deque([start])
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    visited[start[0]][start[1]] = island_id
+    island = []
+
+    while q:
+        x, y = q.popleft()
+        island.append((x, y))
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and not visited[nx][ny] and grid[nx][ny] == 1:
+                visited[nx][ny] = island_id
+                q.append((nx, ny))
+
+    return island
+
+def calculate_distance(grid, island1, island2):
+    min_distance = float('inf')
+    for x1, y1 in island1:
+        for x2, y2 in island2:
+            distance = abs(x1 - x2) + abs(y1 - y2) - 1
+            min_distance = min(min_distance, distance)
+    return min_distance
+
+def find_min_flips(grid):
+    if not grid or not grid[0]:
+        return 0
+
+    visited = [[0] * len(grid[0]) for _ in range(len(grid))]
+    islands = []
+    island_id = 1
+
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == 1 and not visited[i][j]:
+                island = bfs(grid, (i, j), visited, island_id)
+                islands.append(island)
+                island_id += 1
+
+    distances = []
+    for i in range(len(islands)):
+        for j in range(i + 1, len(islands)):
+            distance = calculate_distance(grid, islands[i], islands[j])
+            distances.append((distance, i, j))
+
+    distances.sort()
+    parent = list(range(len(islands)))
+
+    def find(x):
+        if parent[x] != x:
+            parent[x] = find(parent[x])
+        return parent[x]
+
+    total_flips = 0
+    for distance, i, j in distances:
+        root_i = find(i)
+        root_j = find(j)
+        if root_i != root_j:
+            total_flips += distance
+            parent[root_i] = root_j
+
+    return total_flips
+
+# Example usage:
+grid = [
+    [1, 0, 0, 1],
+    [0, 0, 1, 0],
+    [0, 1, 0, 0],
+    [1, 0, 0, 1]
+]
+
+print(find_min_flips(grid))  # Output depends on the grid structure
+```
+
+In this implementation:
+- The `bfs` function identifies and labels each island.
+- The `calculate_distance` function calculates the minimum number of flips needed to connect two islands.
+- The `find_min_flips` function uses the MST concept to determine the minimum number of flips required to connect all islands.	
+
+The time complexity of the provided solution can be analyzed based on the three main parts: identifying the islands, calculating the distances between the islands, and finding the Minimum Spanning Tree (MST).
+
+1. **Identifying Islands (BFS/DFS)**:
+   - For each cell in the grid, if it is part of an unvisited island, we perform a BFS/DFS to mark all the cells of that island.
+   - This step processes each cell exactly once.
+   - Time complexity: O(m * n), where m is the number of rows and n is the number of columns in the grid.
+
+2. **Calculating Distances between Islands**:
+   - For each pair of islands, calculate the minimum distance between any two cells (one from each island).
+   - If there are k islands, there are k choose 2 = O(k^2) pairs of islands.
+   - For each pair, we compare all pairs of cells, leading to O(s1 * s2) comparisons, where s1 and s2 are the sizes of the two islands.
+   - In the worst case, this can be O((m * n)^2) comparisons.
+   - However, typically the number of islands is small compared to the number of cells, so we simplify to O(k^2 * s^2), where s is the average size of an island.
+
+3. **Finding the MST (Kruskal's or Prim's)**:
+   - The number of edges in the graph of islands is O(k^2).
+   - Kruskal's algorithm has a time complexity of O(E log E), where E is the number of edges.
+   - Time complexity for MST: O(k^2 log k^2) = O(k^2 log k).
+
+Combining these steps:
+- Identifying Islands: O(m * n)
+- Calculating Distances: O(k^2 * s^2) (typically much smaller than (m * n)^2)
+- Finding MST: O(k^2 log k)
+
+Overall, the dominant factor depends on the number of islands and their sizes. In the worst case scenario with large grids and many islands, the complexity can approach O((m * n)^2) for distance calculations. However, in practical scenarios with fewer islands, the complexity is often dominated by the grid traversal and MST calculations.
+
+Thus, the overall time complexity can be summarized as approximately O(m * n + k^2 * s^2 + k^2 log k), which in practical cases simplifies to O(m * n).
