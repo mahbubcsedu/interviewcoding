@@ -1,3 +1,54 @@
+## Next permutation variant
+To generate the next permutation multiple times, we can start with the given array and repeatedly apply the next permutation algorithm to get the desired number of permutations. The next permutation algorithm rearranges numbers into the lexicographically next greater permutation of numbers. If such an arrangement is not possible, it rearranges it to the lowest possible order (i.e., sorted in ascending order).
+
+Here's a Python function to achieve this:
+
+```python
+def next_permutation(nums):
+    # Find the first decreasing element from the end
+    i = len(nums) - 2
+    while i >= 0 and nums[i] >= nums[i + 1]:
+        i -= 1
+
+    if i >= 0:
+        # Find the element just larger than nums[i]
+        j = len(nums) - 1
+        while j >= 0 and nums[j] <= nums[i]:
+            j -= 1
+        # Swap the elements
+        nums[i], nums[j] = nums[j], nums[i]
+
+    # Reverse the elements from i+1 to the end
+    nums[i + 1:] = reversed(nums[i + 1:])
+
+def generate_permutations(nums, k):
+    result = []
+    for _ in range(k):
+        result.append(nums[:])
+        next_permutation(nums)
+    return result
+
+# Example usage:
+nums = [1, 2, 3]
+k = 5
+permutations = generate_permutations(nums, k)
+for perm in permutations:
+    print(perm)
+```
+
+### Explanation:
+1. **Next Permutation Algorithm**:
+   - The function `next_permutation(nums)` rearranges the given array to the next permutation in lexicographical order.
+   - It finds the first decreasing element from the end and then finds the element just larger than it.
+   - It swaps these two elements and reverses the elements from the position right after the first decreasing element to the end.
+
+2. **Generate Permutations**:
+   - The function `generate_permutations(nums, k)` generates the next permutation `k` times.
+   - It appends each generated permutation to the result list.
+
+### Example Usage:
+- The example input `[1, 2, 3]` generates the next 5 permutations: `[1, 2, 3]`, `[1, 3, 2]`, `[2, 1, 3]`, `[2, 3, 1]`, `[3, 1, 2]`.
+
 ## TOP-k frequent elements with constant O(n) time
 To find the top K frequent elements in an array in O(n) time complexity, you can use the "bucket sort" approach. This method leverages the counting of elements and then sorting them using frequency buckets. Here's how you can achieve this:
 
