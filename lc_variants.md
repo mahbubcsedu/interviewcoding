@@ -1,3 +1,65 @@
+## TOP-k frequent elements with constant O(n) time
+To find the top K frequent elements in an array in O(n) time complexity, you can use the "bucket sort" approach. This method leverages the counting of elements and then sorting them using frequency buckets. Here's how you can achieve this:
+
+1. Count the frequency of each element in the array.
+2. Use an array (bucket) to store elements based on their frequency.
+3. Traverse the buckets from highest frequency to lowest and collect the top K frequent elements.
+
+Here's a Python implementation of this approach:
+
+```python
+from collections import defaultdict, Counter
+
+def top_k_frequent(nums, k):
+    # Step 1: Count the frequency of each element
+    freq_map = Counter(nums)
+    
+    # Step 2: Create buckets where index represents frequency
+    bucket = [[] for _ in range(len(nums) + 1)]
+    for num, freq in freq_map.items():
+        bucket[freq].append(num)
+    
+    # Step 3: Collect top K frequent elements
+    result = []
+    for i in range(len(bucket) - 1, 0, -1):
+        for num in bucket[i]:
+            result.append(num)
+            if len(result) == k:
+                return result
+
+# Example usage:
+nums = [1, 1, 1, 2, 2, 3]
+k = 2
+print(top_k_frequent(nums, k))  # Output: [1, 2]
+
+nums = [4, 4, 4, 4, 2, 2, 2, 1, 1, 3]
+k = 3
+print(top_k_frequent(nums, k))  # Output: [4, 2, 1]
+```
+
+### Explanation:
+1. **Count Frequencies**:
+   - Use `Counter` from the `collections` module to count the frequency of each element in the array.
+
+2. **Create Buckets**:
+   - Create a list of empty lists (buckets) where the index represents the frequency of elements.
+   - Place each element into the appropriate bucket based on its frequency.
+
+3. **Collect Top K Frequent Elements**:
+   - Traverse the buckets in reverse order (from highest frequency to lowest).
+   - Collect elements from the buckets until you have collected the top K frequent elements.
+
+### Complexity:
+- **Time Complexity**: O(n)
+  - Counting frequencies takes O(n).
+  - Creating and filling buckets takes O(n).
+  - Collecting the top K elements takes O(n).
+
+- **Space Complexity**: O(n)
+  - Space is used to store the frequency map and buckets.
+
+This approach efficiently finds the top K frequent elements in linear time, making it suitable for large datasets. 
+
 ## Matrix optimal path search 
 To find the most optimal path from the top left to the bottom right of the matrix, we can use Breadth-First Search (BFS) for the initial solution. However, BFS has O(M*N) time complexity and space complexity, which might not be optimal for larger matrices. We will first implement the BFS solution to demonstrate how it works.
 
