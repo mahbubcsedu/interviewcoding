@@ -1,4 +1,5 @@
-## Matrix optimal path search To find the most optimal path from the top left to the bottom right of the matrix, we can use Breadth-First Search (BFS) for the initial solution. However, BFS has O(M*N) time complexity and space complexity, which might not be optimal for larger matrices. We will first implement the BFS solution to demonstrate how it works.
+## Matrix optimal path search 
+To find the most optimal path from the top left to the bottom right of the matrix, we can use Breadth-First Search (BFS) for the initial solution. However, BFS has O(M*N) time complexity and space complexity, which might not be optimal for larger matrices. We will first implement the BFS solution to demonstrate how it works.
 
 Then we will discuss a possible improvement using A* Search algorithm, which can potentially improve the efficiency by using heuristics to guide the search.
 
