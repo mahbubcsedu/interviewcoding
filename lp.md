@@ -50,3 +50,7 @@ I respectfully pushed back on their proposal and recommended two possible soluti
 This disagreement was resolved through constructive discussions. The AI Fabric team understood the potential issues, and we collaboratively decided to implement the API with the callback mechanism. This approach ensured that our system remained robust and scalable, and it also provided us with a more reliable way to handle retries and manage burst traffic.
 
 This experience taught me the importance of clear communication, collaboration, and being open to different perspectives to achieve the best solution for the project.
+
+## List of possible questions 
+1. Most impactful project you've worked on recently
+2. Can you share an example where you resolved a significant conflict between different teams or departments in your organization
