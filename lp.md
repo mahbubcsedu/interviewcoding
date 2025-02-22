@@ -62,3 +62,8 @@ had a conflict with a difficult coworker (it's okay if you don't have one)
 had to deal with ambiguous requirements. Follow up: did you need to take any risks?
 you learned something by following another person's example
 Tell me about an area you want to grow in, and what steps you have taken to achieve it
+
+Critical feedback you gave/received
+Disagreement with a manager
+A time you were right but had to convince others etc..
+Used the STAR method whereever possible. Went well!
