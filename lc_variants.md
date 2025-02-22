@@ -762,3 +762,68 @@ In this implementation:
 - The function `max_consecutive_holidays` uses a sliding window technique to find the maximum number of consecutive holidays that can be achieved.
 
 
+## Range sum BST variant
+Absolutely! By leveraging the properties of a Binary Search Tree (BST), you can optimize the in-order traversal to stop early if a node's value is outside the specified range. Specifically, you can avoid traversing the left subtree if the current node's value is less than the lower boundary (`low`), and you can avoid traversing the right subtree if the current node's value is greater than the upper boundary (`high`).
+
+Here’s an updated implementation that includes these optimizations:
+
+```python
+class TreeNode:
+    def __init__(self, value=0, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+def average_in_range(root, low, high):
+    def in_order_traversal(node):
+        nonlocal total_sum, count
+        if not node:
+            return
+        
+        # Only traverse the left subtree if the current node's value is greater than the lower boundary
+        if node.value > low:
+            in_order_traversal(node.left)
+        
+        # Process the current node
+        if low <= node.value <= high:
+            total_sum += node.value
+            count += 1
+        
+        # Only traverse the right subtree if the current node's value is less than the upper boundary
+        if node.value < high:
+            in_order_traversal(node.right)
+    
+    total_sum = 0
+    count = 0
+    in_order_traversal(root)
+    
+    if count == 0:
+        return 0  # To avoid division by zero
+    
+    return total_sum / count
+
+# Example usage:
+# Constructing the BST
+#        5
+#       / \
+#      3   8
+#     / \   \
+#    2   4   10
+
+root = TreeNode(5)
+root.left = TreeNode(3)
+root.right = TreeNode(8)
+root.left.left = TreeNode(2)
+root.left.right = TreeNode(4)
+root.right.right = TreeNode(10)
+
+low = 3
+high = 8
+print(average_in_range(root, low, high))  # Output: 5.0
+```
+
+In this implementation:
+- The `in_order_traversal` function is optimized to avoid unnecessary traversals.
+- The left subtree is only traversed if the current node's value is greater than `low`.
+- The right subtree is only traversed if the current node's value is less than `high`.
+
