@@ -1,3 +1,41 @@
+## Return the sum of distinct characters Input: 3,1,2,1,2 Output: 6
+```python
+def sum_of_distinct_numbers(numbers):
+    # Use a set to find distinct numbers
+    distinct_numbers = set(numbers)
+    # Return the sum of the distinct numbers
+    return sum(distinct_numbers)
+
+# Example usage:
+input_numbers = [3, 1, 2, 1, 2]
+output = sum_of_distinct_numbers(input_numbers)
+print(output)  # Output: 6
+
+```
+
+O(1) space but O(nlogn) time
+```python
+def sum_of_distinct_numbers(nums):
+    if not nums:
+        return 0
+    
+    nums.sort()
+    sum_distinct = nums[0]
+    
+    for i in range(1, len(nums)):
+        if nums[i] != nums[i - 1]:
+            sum_distinct += nums[i]
+
+    return sum_distinct
+
+# Example usage:
+input_numbers = [3, 1, 2, 1, 2]
+output = sum_of_distinct_numbers(input_numbers)
+print(output)  # Output: 6
+
+```
+
+cccccbtjfebutlr
 ## variation of random pick weight-how to evaluate probablity
 To test the probability of picking elements using your `Solution` class, you can run multiple trials and collect the frequency of each index being picked. Then, compare the observed frequencies to the expected probabilities.
 
