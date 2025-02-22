@@ -1,3 +1,69 @@
+## Nearest zero (scattered zero, so less zero more ones)
+Let's solve this problem by using a Breadth-First Search (BFS) approach. The idea is to initialize a queue with all positions of zeros and then perform a multi-source BFS to calculate the minimum distance to the nearest zero for each cell in the matrix.
+
+Here's how you can implement it:
+
+```python
+from collections import deque
+
+def updateMatrix(matrix):
+    m, n = len(matrix), len(matrix[0])
+    distances = [[float('inf')] * n for _ in range(m)]
+    queue = deque()
+
+    # Initialize the queue with all positions of zeros
+    for i in range(m):
+        for j in range(n):
+            if matrix[i][j] == 0:
+                distances[i][j] = 0
+                queue.append((i, j))
+
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Down, Up, Right, Left
+
+    while queue:
+        x, y = queue.popleft()
+        
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            
+            if 0 <= nx < m and 0 <= ny < n:
+                if distances[nx][ny] > distances[x][y] + 1:
+                    distances[nx][ny] = distances[x][y] + 1
+                    queue.append((nx, ny))
+
+    return distances
+
+# Example usage:
+matrix = [
+    [0, 0, 0],
+    [1, 0, 1],
+    [1, 1, 1]
+]
+result = updateMatrix(matrix)
+for row in result:
+    print(row)
+```
+
+### Explanation:
+1. **Initialization**:
+   - `distances` is initialized with infinity for all cells.
+   - `queue` is initialized with all positions of zeros in the matrix.
+
+2. **Breadth-First Search (BFS)**:
+   - The BFS is performed starting from all zero positions. For each position, we update the distance of neighboring cells if a shorter path to a zero is found.
+   - The BFS ensures that the shortest path is found because it explores nodes level by level.
+
+3. **Updating Distances**:
+   - For each cell `(x, y)` dequeued, we explore its four possible neighbors (down, up, right, left).
+   - If a neighboring cell `(nx, ny)` has a larger distance than `distances[x][y] + 1`, we update its distance and add it to the queue.
+
+### Complexity:
+- **Time Complexity**: O(m * n)
+  - Each cell is processed at most once, and there are m * n cells in the matrix.
+- **Space Complexity**: O(m * n)
+  - Space is used for the distance matrix and the queue.
+
+
 ## Next permutation variant
 To generate the next permutation multiple times, we can start with the given array and repeatedly apply the next permutation algorithm to get the desired number of permutations. The next permutation algorithm rearranges numbers into the lexicographically next greater permutation of numbers. If such an arrangement is not possible, it rearranges it to the lowest possible order (i.e., sorted in ascending order).
 
