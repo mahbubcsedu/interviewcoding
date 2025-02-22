@@ -1,3 +1,47 @@
+## Largest concatenate array (not lc)
+To solve this problem, we need to arrange the numbers to form the largest possible concatenated number and then find the second highest value in that arrangement.
+
+Here's how you can do it:
+
+1. Convert each integer to a string to facilitate comparison.
+2. Sort the strings using a custom comparator that compares the concatenated results.
+3. Retrieve the second highest value from the sorted list.
+
+Here’s the Python implementation:
+
+```python
+from functools import cmp_to_key
+
+def custom_compare(x, y):
+    if x + y > y + x:
+        return -1
+    elif x + y < y + x:
+        return 1
+    else:
+        return 0
+
+def find_second_highest(nums):
+    # Convert integers to strings
+    nums_str = list(map(str, nums))
+    # Sort the numbers using the custom comparator
+    nums_str.sort(key=cmp_to_key(custom_compare))
+    # Convert sorted strings back to integers
+    nums_sorted = list(map(int, nums_str))
+    # Return the second highest value
+    return nums_sorted[1]
+
+# Example usage:
+nums = [1, 2, 3, 4, 5]
+result = find_second_highest(nums)
+print(result)  # Output: 4
+```
+
+In this implementation:
+- The `custom_compare` function compares two strings by concatenating them in different orders and checking which order results in a larger value.
+- The `find_second_highest` function converts the integers to strings, sorts them using the custom comparator, and converts them back to integers.
+- Finally, it retrieves and returns the second highest value from the sorted list.
+
+
 ## Evaluate postfix
 To evaluate an expression like `( + 3 2 ( * 4 6 ) )`, which is in prefix notation (also known as Polish notation), you can use a stack-based approach. Here's how you can do it:
 
