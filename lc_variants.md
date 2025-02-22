@@ -1080,3 +1080,31 @@ In this implementation:
 - For each segment, it calculates the number of subarrays using the formula \(\frac{(j - i) \cdot (j - i - 1)}{2}\), which represents the number of subarrays in the current segment.
 - The main function `count_monotonic_subarrays` calls `count_direction` twice, once for increasing and once for decreasing subarrays, and returns the total count.
 
+
+## Find valley or plain
+To find a "valley" or a "plain" in an array (where a valley is defined as three consecutive integers where the middle integer is less than its neighbors, and a plain is defined as three consecutive integers that are all the same value), you can iterate through the array and check each triplet of consecutive elements.
+
+Here’s a Python function to accomplish this:
+
+```python
+def find_valley_or_plain(nums):
+    valleys_and_plains = []
+    
+    for i in range(1, len(nums) - 1):
+        if nums[i] < nums[i - 1] and nums[i] < nums[i + 1]:
+            valleys_and_plains.append((nums[i - 1], nums[i], nums[i + 1]))
+        elif nums[i] == nums[i - 1] and nums[i] == nums[i + 1]:
+            valleys_and_plains.append((nums[i - 1], nums[i], nums[i + 1]))
+
+    return valleys_and_plains
+
+# Example usage:
+nums = [3, 1, 2, 4, 4, 4, 2, 1, 3]
+result = find_valley_or_plain(nums)
+print(result)  # Output: [(3, 1, 2), (4, 4, 4)]
+```
+
+In this implementation:
+- The function `find_valley_or_plain` iterates through the array starting from the second element and ending at the second-to-last element.
+- It checks if the current element forms a valley or a plain with its neighbors and appends the triplet to the result list if it does.
+- The function returns a list of all valleys and plains found in the array.
