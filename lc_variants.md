@@ -1,3 +1,83 @@
+## LCA for n-array tree
+To handle edge cases where one or both of the nodes are not present in the n-ary tree while finding the Lowest Common Ancestor (LCA), we need to ensure that we verify the presence of both nodes before determining the LCA. If one or both nodes are not present, we should return a specific indication that the LCA does not exist.
+
+Here's an updated implementation that handles these edge cases:
+
+```python
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.children = []
+
+def find_LCA(root, p, q):
+    # Helper function to check if a node exists in the tree
+    def node_exists(root, target):
+        if root is None:
+            return False
+        if root == target:
+            return True
+        return any(node_exists(child, target) for child in root.children)
+
+    # Check if both nodes are present in the tree
+    if not node_exists(root, p) or not node_exists(root, q):
+        return None
+    
+    def helper(root, p, q):
+        if root is None:
+            return None
+        if root == p or root == q:
+            return root
+        
+        found_nodes = []
+        
+        for child in root.children:
+            node = helper(child, p, q)
+            if node:
+                found_nodes.append(node)
+        
+        if len(found_nodes) == 2:
+            return root
+        
+        return found_nodes[0] if found_nodes else None
+
+    return helper(root, p, q)
+
+# Example usage:
+# Constructing the n-ary tree
+#         1
+#       / | \
+#      2  3  4
+#     /|   \
+#    5 6    7
+
+root = Node(1)
+node2 = Node(2)
+node3 = Node(3)
+node4 = Node(4)
+node5 = Node(5)
+node6 = Node(6)
+node7 = Node(7)
+
+root.children = [node2, node3, node4]
+node2.children = [node5, node6]
+node3.children = [node7]
+
+p = node5
+q = node6
+
+lca = find_LCA(root, p, q)
+if lca:
+    print(f"LCA of {p.value} and {q.value} is {lca.value}")  # Output: LCA of 5 and 6 is 2
+else:
+    print("One or both nodes are not present in the tree")
+```
+
+In this updated implementation:
+- A helper function `node_exists` is added to check if a given node exists in the tree.
+- Before calling the main `helper` function to find the LCA, the existence of both nodes is verified.
+- If either node does not exist, the function returns `None`, indicating that the LCA does not exist.
+- The rest of the `helper` function remains the same, performing the LCA search.
+
 ## Largest concatenate array (not lc)
 To solve this problem, we need to arrange the numbers to form the largest possible concatenated number and then find the second highest value in that arrangement.
 
