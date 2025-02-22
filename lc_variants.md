@@ -1,37 +1,176 @@
+## Matrix optimal path search To find the most optimal path from the top left to the bottom right of the matrix, we can use Breadth-First Search (BFS) for the initial solution. However, BFS has O(M*N) time complexity and space complexity, which might not be optimal for larger matrices. We will first implement the BFS solution to demonstrate how it works.
+
+Then we will discuss a possible improvement using A* Search algorithm, which can potentially improve the efficiency by using heuristics to guide the search.
+
+### BFS Solution
+
+Here's the BFS solution to find the optimal path:
+
+```python
+from collections import deque
+
+def bfs_path(matrix):
+    m, n = len(matrix), len(matrix[0])
+    if matrix[0][0] == 1 or matrix[m-1][n-1] == 1:
+        return [-1]
+    
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]  # Down, Right, Up, Left
+    queue = deque([((0, 0), [(0, 0)])])
+    visited = set((0, 0))
+    
+    while queue:
+        (x, y), path = queue.popleft()
+        
+        if (x, y) == (m-1, n-1):
+            return path
+        
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n and matrix[nx][ny] == 0 and (nx, ny) not in visited:
+                visited.add((nx, ny))
+                queue.append(((nx, ny), path + [(nx, ny)]))
+    
+    return [-1]
+
+# Example usage:
+matrix1 = [
+    [0, 0, 0],
+    [1, 0, 1],
+    [1, 0, 0]
+]
+matrix2 = [
+    [0, 0, 0],
+    [1, 1, 1],
+    [1, 0, 0]
+]
+
+print(bfs_path(matrix1))  # Output: [[0,0], [0,1], [1,1], [2,1], [2,2]]
+print(bfs_path(matrix2))  # Output: [-1]
+```
+
+### Follow-up: A* Search Algorithm
+
+To improve the efficiency, we can use the A* Search algorithm, which uses heuristics to guide the search towards the target more quickly. A common heuristic is the Manhattan distance between the current cell and the target cell.
+
+Here's an implementation of the A* Search algorithm for this problem:
+
+```python
+import heapq
+
+def a_star_path(matrix):
+    m, n = len(matrix), len(matrix[0])
+    if matrix[0][0] == 1 or matrix[m-1][n-1] == 1:
+        return [-1]
+    
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]  # Down, Right, Up, Left
+    start = (0, 0)
+    target = (m-1, n-1)
+    
+    def heuristic(x, y):
+        return abs(x - target[0]) + abs(y - target[1])
+    
+    open_set = [(heuristic(0, 0), 0, (0, 0), [(0, 0)])]  # (f_score, g_score, (x, y), path)
+    visited = set()
+    
+    while open_set:
+        _, g, (x, y), path = heapq.heappop(open_set)
+        
+        if (x, y) in visited:
+            continue
+        visited.add((x, y))
+        
+        if (x, y) == target:
+            return path
+        
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n and matrix[nx][ny] == 0 and (nx, ny) not in visited:
+                new_g = g + 1
+                f_score = new_g + heuristic(nx, ny)
+                heapq.heappush(open_set, (f_score, new_g, (nx, ny), path + [(nx, ny)]))
+    
+    return [-1]
+
+# Example usage:
+matrix1 = [
+    [0, 0, 0],
+    [1, 0, 1],
+    [1, 0, 0]
+]
+matrix2 = [
+    [0, 0, 0],
+    [1, 1, 1],
+    [1, 0, 0]
+]
+
+print(a_star_path(matrix1))  # Output: [[0,0], [0,1], [1,1], [2,1], [2,2]]
+print(a_star_path(matrix2))  # Output: [-1]
+```
+
+### Explanation:
+- **BFS Solution**: Uses a queue to explore the matrix level-by-level, recording paths, and returning the shortest path when reaching the target.
+- **A* Search Algorithm**: Uses a priority queue (min-heap) to explore the most promising paths first, guided by the heuristic function (Manhattan distance).
+
+A* Search is a popular pathfinding algorithm known for its optimality and efficiency. Here's an overview of its time and space complexity:
+
+### Time Complexity
+
+The time complexity of A* Search depends on several factors:
+1. **Branching Factor (b)**: The average number of children per node.
+2. **Depth of the Optimal Solution (d)**: The number of steps in the optimal path from the start node to the goal node.
+3. **Heuristic Function (h(n))**: The accuracy and efficiency of the heuristic function used to estimate the cost to reach the goal.
+
+In the worst case, A* Search can have a time complexity of O(b^d), where b is the branching factor and d is the depth of the optimal solution. This is similar to other uninformed search algorithms like Breadth-First Search (BFS).
+
+However, if the heuristic function h(n) is well-designed and efficient, the performance of A* Search can be significantly improved. The time complexity can be better understood as O(ε^d), where ε represents the error in the heuristic function. If the heuristic function is accurate and admissible (never overestimates the true cost), the algorithm explores fewer nodes, leading to faster convergence.
+
+### Space Complexity
+
+The space complexity of A* Search is also O(b^d), as the algorithm needs to store all the nodes it generates in memory. This includes:
+1. **Open Set**: The set of nodes that have been generated but not yet evaluated.
+2. **Closed Set**: The set of nodes that have already been evaluated.
+
+The open set is typically implemented as a priority queue (min-heap) to efficiently retrieve the node with the lowest estimated cost. The closed set helps to avoid re-exploring nodes.
+
+### Optimizations
+
+To improve the performance and reduce the space complexity of A* Search, several optimizations can be applied:
+1. **Memory-Bounded A* (MA*)**: A variant that uses a limited amount of memory and discards less promising paths.
+2. **Iterative Deepening A* (IDA*)**: Combines the benefits of A* and iterative deepening, reducing memory usage while maintaining optimality.
+
+By using these optimizations and carefully designing the heuristic function, the efficiency of A* Search can be significantly enhanced.
+
+In summary, the time and space complexity of A* Search is O(b^d) in the worst case, but it can be improved with a good heuristic function and additional optimizations. If you have any more questions or need further clarification, feel free to ask!
+
 ## Exclusive time of function variant
-To achieve this, you need to track the time spent on each function, excluding the time spent in any nested (internal) calls. Here’s how you can do it:
+You're right! To accurately calculate the exclusive time for each function, we need to keep track of the previous function's end time and adjust the existing function's exclusive time accordingly. This way, we can ensure that the nested function's time is correctly accounted for.
 
-1. Parse the log entries to get the function names and their timestamps.
-2. Use a stack to keep track of the function calls and their start times.
-3. Calculate the exclusive time spent on each function by considering the nested calls.
-
-Here's a Python implementation to solve this problem:
+Here's an updated implementation that handles this correctly:
 
 ```python
 def calculate_function_times(logs):
     stack = []
-    total_times = {}
     exclusive_times = {}
+    previous_time = 0  # Keep track of the previous timestamp
 
     for log in logs:
         func, timestamp = log.split()
         timestamp = int(timestamp)
 
         if stack:
-            curr_func, start_time = stack[-1]
+            curr_func = stack[-1]
+            # Update the exclusive time for the current function
             if curr_func not in exclusive_times:
                 exclusive_times[curr_func] = 0
-            exclusive_times[curr_func] += timestamp - start_time
+            exclusive_times[curr_func] += timestamp - previous_time
 
-        if func not in total_times:
-            total_times[func] = 0
-        total_times[func] += 1
-
-        if func in exclusive_times:
+        # If the current function is ending, pop it from the stack
+        if stack and func == stack[-1]:
             stack.pop()
-            exclusive_times[func] -= timestamp
         else:
-            stack.append((func, timestamp))
+            stack.append(func)
+
+        previous_time = timestamp
 
     return exclusive_times
 
@@ -46,16 +185,35 @@ logs = [
 ]
 
 result = calculate_function_times(logs)
-print(result)  # Output: {'bar': 20, 'foobar': 20, 'foo': 60}
+print(result)  # Output: {'foo': 60, 'bar': 20, 'foobar': 20}
 ```
 
-In this implementation:
-- The `calculate_function_times` function takes a list of log entries.
-- We use a stack to keep track of the function calls and their start times.
-- We calculate the exclusive time spent on each function by considering nested calls.
-- The function returns a dictionary with the exclusive time spent on each function.
+### Explanation:
+1. **Initialization**:
+   - `stack = []`: Initialize an empty stack to keep track of active function calls.
+   - `exclusive_times = {}`: Initialize a dictionary to store the exclusive time for each function.
+   - `previous_time = 0`: Keep track of the previous timestamp.
 
-Feel free to test this code with different log entries and let me know if you have any questions!
+2. **Log Processing Loop**:
+   - `for log in logs:`: Iterate over each log entry.
+   - `func, timestamp = log.split()`: Split the log entry into function name and timestamp.
+   - `timestamp = int(timestamp)`: Convert the timestamp to an integer.
+
+3. **Update Exclusive Time for Current Active Function**:
+   - `if stack:`: Check if there is an active function in the stack.
+   - `curr_func = stack[-1]`: Get the current active function from the top of the stack.
+   - `if curr_func not in exclusive_times: exclusive_times[curr_func] = 0`: Initialize the exclusive time for the current function if not already done.
+   - `exclusive_times[curr_func] += timestamp - previous_time`: Add the time spent since the last log entry to the exclusive time of the current function.
+
+4. **Handle End Log for the Current Function**:
+   - `if stack and func == stack[-1]: stack.pop()`: If the current function is ending, pop it from the stack.
+
+5. **Handle Start Log for the Current Function**:
+   - `else: stack.append(func)`: Push the current function onto the stack.
+
+6. **Update Previous Timestamp**:
+   - `previous_time = timestamp`: Update the previous timestamp to the current timestamp.
+
 ## Return the sum of distinct characters Input: 3,1,2,1,2 Output: 6
 ```python
 def sum_of_distinct_numbers(numbers):
