@@ -1041,4 +1041,42 @@ In this implementation:
 
 This `MagicMap` class is not similar to an LRU cache, as it does not implement any caching or eviction policies. An LRU (Least Recently Used) cache typically has methods for getting and putting items, with an additional mechanism to evict the least recently used items when the cache reaches its capacity.
 
+### count monotonic subarray
+To count the number of monotonic subarrays (both increasing and decreasing) in a given array, we can use a two-pointer approach. Here's a Python function to accomplish this:
+
+```python
+def count_monotonic_subarrays(nums):
+    n = len(nums)
+    count = 0
+    
+    # Function to count monotonic subarrays in a given direction
+    def count_direction(nums, increasing=True):
+        i = 0
+        count = 0
+        while i < n:
+            j = i + 1
+            while j < n and ((increasing and nums[j] >= nums[j - 1]) or (not increasing and nums[j] <= nums[j - 1])):
+                j += 1
+            count += (j - i) * (j - i - 1) // 2  # number of subarrays in current segment
+            i = j
+        return count
+    
+    # Count increasing subarrays
+    count += count_direction(nums, increasing=True)
+    
+    # Count decreasing subarrays
+    count += count_direction(nums, increasing=False)
+    
+    return count
+
+# Example usage:
+nums = [1, 2, 2, 3, 2, 2, 1, 4]
+print(count_monotonic_subarrays(nums))  # Output will depend on the array structure
+```
+
+In this implementation:
+- The `count_direction` function counts the number of monotonic subarrays in a specified direction (`increasing` or `decreasing`).
+- The function iterates through the array using two pointers to identify segments of monotonic subarrays.
+- For each segment, it calculates the number of subarrays using the formula \(\frac{(j - i) \cdot (j - i - 1)}{2}\), which represents the number of subarrays in the current segment.
+- The main function `count_monotonic_subarrays` calls `count_direction` twice, once for increasing and once for decreasing subarrays, and returns the total count.
 
