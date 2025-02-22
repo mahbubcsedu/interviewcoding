@@ -54,3 +54,11 @@ This experience taught me the importance of clear communication, collaboration, 
 ## List of possible questions 
 1. Most impactful project you've worked on recently
 2. Can you share an example where you resolved a significant conflict between different teams or departments in your organization
+
+3. Tell me a time you...
+took initiative
+had pushback on your design
+had a conflict with a difficult coworker (it's okay if you don't have one)
+had to deal with ambiguous requirements. Follow up: did you need to take any risks?
+you learned something by following another person's example
+Tell me about an area you want to grow in, and what steps you have taken to achieve it
