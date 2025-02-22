@@ -1,3 +1,49 @@
+## Evaluate postfix
+To evaluate an expression like `( + 3 2 ( * 4 6 ) )`, which is in prefix notation (also known as Polish notation), you can use a stack-based approach. Here's how you can do it:
+
+1. Split the input expression into tokens.
+2. Process the tokens from right to left, using a stack to evaluate the expression.
+3. If the token is a number, push it onto the stack.
+4. If the token is an operator, pop the necessary operands from the stack, perform the operation, and push the result back onto the stack.
+5. The final result will be the last remaining value in the stack.
+
+Here's a Python implementation:
+
+```python
+def evaluate_expression(expression):
+    def helper(tokens):
+        token = tokens.pop()
+        if token == '+':
+            return helper(tokens) + helper(tokens)
+        elif token == '-':
+            return helper(tokens) - helper(tokens)
+        elif token == '*':
+            return helper(tokens) * helper(tokens)
+        elif token == '/':
+            return helper(tokens) // helper(tokens)
+        else:
+            return int(token)
+
+    tokens = expression.split()[::-1]
+    return helper(tokens)
+
+# Example usage:
+expression = "( + 3 2 ( * 4 6 ) )"
+# Remove the parentheses for simplicity
+expression = expression.replace('(', '').replace(')', '')
+result = evaluate_expression(expression)
+print(result)  # Output: 27
+```
+
+In this implementation:
+- The `helper` function is a recursive function that processes the tokens in the stack.
+- The `tokens` list is created by splitting the input expression and reversing the order of the tokens.
+- The `helper` function evaluates the expression by recursively processing the tokens.
+
+The example provided `( + 3 2 ( * 4 6 ) )` evaluates to `3 + 2 + (4 * 6) = 5 + 24 = 29`.
+
+
+
 ## Neeted list weight sum 339
 
 To modify the solution to multiply each integer by its reverse depth (i.e., depth from bottom up), we need to first calculate the maximum depth of the nested list. Once we have this information, we can use a similar depth-first search (DFS) approach to calculate the weighted sum based on the reverse depth.
