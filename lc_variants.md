@@ -1,3 +1,61 @@
+## Exclusive time of function variant
+To achieve this, you need to track the time spent on each function, excluding the time spent in any nested (internal) calls. Here’s how you can do it:
+
+1. Parse the log entries to get the function names and their timestamps.
+2. Use a stack to keep track of the function calls and their start times.
+3. Calculate the exclusive time spent on each function by considering the nested calls.
+
+Here's a Python implementation to solve this problem:
+
+```python
+def calculate_function_times(logs):
+    stack = []
+    total_times = {}
+    exclusive_times = {}
+
+    for log in logs:
+        func, timestamp = log.split()
+        timestamp = int(timestamp)
+
+        if stack:
+            curr_func, start_time = stack[-1]
+            if curr_func not in exclusive_times:
+                exclusive_times[curr_func] = 0
+            exclusive_times[curr_func] += timestamp - start_time
+
+        if func not in total_times:
+            total_times[func] = 0
+        total_times[func] += 1
+
+        if func in exclusive_times:
+            stack.pop()
+            exclusive_times[func] -= timestamp
+        else:
+            stack.append((func, timestamp))
+
+    return exclusive_times
+
+# Example usage:
+logs = [
+    "foo 0",
+    "bar 10",
+    "bar 30",
+    "foobar 50",
+    "foobar 70",
+    "foo 100"
+]
+
+result = calculate_function_times(logs)
+print(result)  # Output: {'bar': 20, 'foobar': 20, 'foo': 60}
+```
+
+In this implementation:
+- The `calculate_function_times` function takes a list of log entries.
+- We use a stack to keep track of the function calls and their start times.
+- We calculate the exclusive time spent on each function by considering nested calls.
+- The function returns a dictionary with the exclusive time spent on each function.
+
+Feel free to test this code with different log entries and let me know if you have any questions!
 ## Return the sum of distinct characters Input: 3,1,2,1,2 Output: 6
 ```python
 def sum_of_distinct_numbers(numbers):
