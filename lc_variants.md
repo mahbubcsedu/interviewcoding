@@ -27,6 +27,7 @@ def updateMatrix(matrix):
             nx, ny = x + dx, y + dy
             
             if 0 <= nx < m and 0 <= ny < n:
+                # we can just use visited but then need another m*n memory
                 if distances[nx][ny] > distances[x][y] + 1:
                     distances[nx][ny] = distances[x][y] + 1
                     queue.append((nx, ny))
