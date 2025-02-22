@@ -1,3 +1,32 @@
+## another variant of search range in sorted list "Find the number of elements in an inclusive range in a sorted list"
+To find the number of elements in an inclusive range in a sorted list, you can use binary search to efficiently find the starting and ending indices of the range. Here's a Python function to do that:
+
+```python
+from bisect import bisect_left, bisect_right
+
+def count_elements_in_range(sorted_list, low, high):
+    # Find the index of the first element >= low
+    start_index = bisect_left(sorted_list, low)
+    # Find the index of the first element > high
+    end_index = bisect_right(sorted_list, high)
+    # The count of elements in the range [low, high]
+    return end_index - start_index
+
+# Example usage:
+sorted_list = [1, 2, 2, 3, 3, 3, 4, 5, 6]
+low = 2
+high = 3
+result = count_elements_in_range(sorted_list, low, high)
+print(result)  # Output: 5 (elements are 2, 2, 3, 3, 3)
+```
+
+In this implementation:
+- We use the `bisect_left` function to find the index of the first element in the list that is greater than or equal to `low`.
+- We use the `bisect_right` function to find the index of the first element in the list that is greater than `high`.
+- The difference between the `end_index` and `start_index` gives the count of elements in the range `[low, high]`.
+
+This approach has a time complexity of O(log n) due to the binary search operations, making it very efficient for large sorted lists.
+
 ## LCA for n-array tree
 To handle edge cases where one or both of the nodes are not present in the n-ary tree while finding the Lowest Common Ancestor (LCA), we need to ensure that we verify the presence of both nodes before determining the LCA. If one or both nodes are not present, we should return a specific indication that the LCA does not exist.
 
