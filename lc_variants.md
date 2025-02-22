@@ -1,3 +1,51 @@
+## variation of random pick weight-how to evaluate probablity
+To test the probability of picking elements using your `Solution` class, you can run multiple trials and collect the frequency of each index being picked. Then, compare the observed frequencies to the expected probabilities.
+
+Here's a Python script to help you test the probabilities:
+
+```python
+import random
+from bisect import bisect_right
+from collections import Counter
+from typing import List
+
+class Solution:
+    def __init__(self, w: List[int]):
+        self.prefix_sum = [0] * (len(w) + 1)
+        for index, item in enumerate(w):
+            self.prefix_sum[index + 1] = self.prefix_sum[index] + item
+
+    def pickIndex(self) -> int:
+        val = random.random() * self.prefix_sum[-1]
+        index = bisect_right(self.prefix_sum, val) - 1
+        return index
+
+def test_solution():
+    weights = [1, 2, 3, 4]
+    solution = Solution(weights)
+    trials = 100000
+    counts = Counter(solution.pickIndex() for _ in range(trials))
+
+    # Print observed frequencies
+    for index in range(len(weights)):
+        print(f"Index {index}: {counts[index]} times ({counts[index] / trials:.2%})")
+
+    # Print expected probabilities
+    total_weight = sum(weights)
+    for index, weight in enumerate(weights):
+        print(f"Expected probability for index {index}: {weight / total_weight:.2%}")
+
+# Run the test
+test_solution()
+```
+
+In this script:
+1. The `Solution` class is used to initialize the prefix sum and pick indices based on weights.
+2. The `test_solution` function runs multiple trials (`100000` in this example) to collect the frequency of each index being picked.
+3. The observed frequencies are printed alongside the expected probabilities.
+
+By comparing the observed frequencies with the expected probabilities, you can verify if the `pickIndex` method is producing results consistent with the given weights.
+
 ## another variant of search range in sorted list "Find the number of elements in an inclusive range in a sorted list"
 To find the number of elements in an inclusive range in a sorted list, you can use binary search to efficiently find the starting and ending indices of the range. Here's a Python function to do that:
 
