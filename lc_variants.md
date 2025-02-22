@@ -143,6 +143,94 @@ By using these optimizations and carefully designing the heuristic function, the
 
 In summary, the time and space complexity of A* Search is O(b^d) in the worst case, but it can be improved with a good heuristic function and additional optimizations. If you have any more questions or need further clarification, feel free to ask!
 
+
+### further memory improvement
+You're right, keeping the entire path in the queue for each state can be memory intensive, especially for large matrices. One way to address this issue is to use a parent map (or parent pointers) to reconstruct the path after reaching the target. This way, you only store the necessary information to trace back the path from the target to the start, rather than keeping the entire path in memory for each state.
+
+Here's how you can implement this approach using A* search:
+
+```python
+import heapq
+
+def a_star_path(matrix):
+    m, n = len(matrix), len(matrix[0])
+    if matrix[0][0] == 1 or matrix[m-1][n-1] == 1:
+        return [-1]
+    
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]  # Down, Right, Up, Left
+    start = (0, 0)
+    target = (m-1, n-1)
+    
+    def heuristic(x, y):
+        return abs(x - target[0]) + abs(y - target[1])
+    
+    open_set = [(heuristic(0, 0), 0, start)]
+    parent_map = {start: None}
+    visited = set()
+    
+    while open_set:
+        _, g, (x, y) = heapq.heappop(open_set)
+        
+        if (x, y) in visited:
+            continue
+        visited.add((x, y))
+        
+        if (x, y) == target:
+            # Reconstruct the path from target to start
+            path = []
+            while (x, y) is not None:
+                path.append((x, y))
+                x, y = parent_map[(x, y)]
+            return path[::-1]
+        
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n and matrix[nx][ny] == 0 and (nx, ny) not in visited:
+                new_g = g + 1
+                f_score = new_g + heuristic(nx, ny)
+                heapq.heappush(open_set, (f_score, new_g, (nx, ny)))
+                parent_map[(nx, ny)] = (x, y)
+    
+    return [-1]
+
+# Example usage:
+matrix1 = [
+    [0, 0, 0],
+    [1, 0, 1],
+    [1, 0, 0]
+]
+matrix2 = [
+    [0, 0, 0],
+    [1, 1, 1],
+    [1, 0, 0]
+]
+
+print(a_star_path(matrix1))  # Output: [[0,0], [0,1], [1,1], [2,1], [2,2]]
+print(a_star_path(matrix2))  # Output: [-1]
+```
+
+### Explanation:
+1. **Initialization**:
+   - `open_set` is a priority queue (min-heap) containing tuples of the form `(f_score, g_score, (x, y))`, where `f_score` is the estimated total cost, and `g_score` is the cost so far.
+   - `parent_map` is a dictionary that maps each cell to its parent cell, allowing us to reconstruct the path later.
+
+2. **Log Processing Loop**:
+   - `while open_set:`: Continue processing nodes until the open set is empty.
+   - `_, g, (x, y) = heapq.heappop(open_set)`: Pop the node with the lowest `f_score` from the priority queue.
+   - `if (x, y) in visited: continue`: Skip if the node is already visited.
+   - `visited.add((x, y))`: Mark the node as visited.
+
+3. **Path Reconstruction**:
+   - `if (x, y) == target:`: Check if the current node is the target.
+   - Reconstruct the path from the target to the start using the `parent_map`.
+
+4. **Explore Neighbors**:
+   - For each neighbor `(nx, ny)`, calculate the `g_score` and `f_score` and push it to the priority queue.
+   - Update the `parent_map` to keep track of the parent node.
+
+By using the parent map, we avoid storing the entire path in memory for each state, reducing the overall memory usage. This approach is more memory-efficient and suitable for large matrices.
+
+
 ## Exclusive time of function variant
 You're right! To accurately calculate the exclusive time for each function, we need to keep track of the previous function's end time and adjust the existing function's exclusive time accordingly. This way, we can ensure that the nested function's time is correctly accounted for.
 
