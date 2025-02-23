@@ -511,6 +511,91 @@ print(a_star_path(matrix2))  # Output: [-1]
 
 By using the parent map, we avoid storing the entire path in memory for each state, reducing the overall memory usage. This approach is more memory-efficient and suitable for large matrices.
 
+## if we want to know h g_score, f_score and h_score in heuristics:
+In the A* search algorithm, the `g_score` and `f_score` are key concepts used to evaluate the cost of reaching nodes in a search space. Here's what they mean:
+
+### `g_score`
+- **Definition**: The `g_score` represents the cost to reach a particular node from the start node.
+- **Purpose**: It helps track the cumulative cost of the path taken to reach a specific node.
+- **Calculation**: The `g_score` for a node is the sum of the `g_score` of its parent node and the cost to move from the parent node to the current node.
+
+### `f_score`
+- **Definition**: The `f_score` is the estimated total cost of a path going through a particular node to reach the goal node.
+- **Purpose**: It combines the actual cost to reach the node (`g_score`) with a heuristic estimate of the cost to reach the goal from that node (`h_score`).
+- **Calculation**: `f_score = g_score + h_score`
+  - `h_score`: The heuristic estimate of the cost to reach the goal node from the current node. This is typically an underestimate to ensure the algorithm's optimality.
+
+### Example to Illustrate `g_score` and `f_score`
+
+Let's say you have a grid and you're trying to find the shortest path from the top-left corner `(0, 0)` to the bottom-right corner `(m-1, n-1)`.
+
+1. **Initialize `g_score`**:
+   - Set the `g_score` of the start node `(0, 0)` to `0` (because the cost to reach the start node from itself is zero).
+   - Initialize the `g_score` of all other nodes to infinity.
+
+2. **Calculate `f_score`**:
+   - Calculate the `f_score` for the start node: `f_score(start) = g_score(start) + h_score(start)`
+   - Typically, the heuristic function `h_score` could be the Manhattan distance from the current node to the goal node: `h_score(x, y) = abs(x - (m-1)) + abs(y - (n-1))`
+
+3. **A* Search Process**:
+   - Use a priority queue to explore nodes based on their `f_score`.
+   - Update the `g_score` for each neighbor of the current node.
+   - Recalculate the `f_score` for each neighbor.
+   - Continue the process until the goal node is reached.
+
+### Example Usage
+Here’s a simplified example in Python:
+
+```python
+import heapq
+
+def a_star_search(start, goal, grid):
+    m, n = len(grid), len(grid[0])
+    
+    def heuristic(x, y):
+        return abs(x - goal[0]) + abs(y - goal[1])
+    
+    open_set = []
+    heapq.heappush(open_set, (0, start))
+    
+    g_score = {start: 0}
+    f_score = {start: heuristic(start[0], start[1])}
+    
+    while open_set:
+        current = heapq.heappop(open_set)[1]
+        
+        if current == goal:
+            # Reconstruct the path (if needed)
+            return g_score[goal]
+        
+        x, y = current
+        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            neighbor = (x + dx, y + dy)
+            if 0 <= neighbor[0] < m and 0 <= neighbor[1] < n and grid[neighbor[0]][neighbor[1]] == 0:
+                tentative_g_score = g_score[current] + 1
+                
+                if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
+                    g_score[neighbor] = tentative_g_score
+                    f_score[neighbor] = tentative_g_score + heuristic(neighbor[0], neighbor[1])
+                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
+    
+    return -1  # Return -1 if no path is found
+
+# Example usage:
+grid = [
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0]
+]
+start = (0, 0)
+goal = (4, 4)
+
+print(a_star_search(start, goal, grid))  # Output: Cost of the shortest path or -1 if no path is found
+```
+
+In this example, we use a priority queue to explore nodes based on their `f_score`, updating the `g_score` and recalculating the `f_score` for each neighbor. The heuristic function used here is the Manhattan distance.
 
 ## Exclusive time of function variant
 You're right! To accurately calculate the exclusive time for each function, we need to keep track of the previous function's end time and adjust the existing function's exclusive time accordingly. This way, we can ensure that the nested function's time is correctly accounted for.
