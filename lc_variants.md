@@ -1,3 +1,96 @@
+## Given a map of existing islands in a section of the ocean, find the size of the largest island you can add that doesn't touch any existing islands
+To find the size of the largest island you can add without touching any existing islands, we can follow these steps:
+
+1. Parse the input matrix representing the ocean and existing islands.
+2. Identify all water cells (cells with `0`).
+3. For each water cell, perform a flood fill (or BFS/DFS) to determine the size of the island that can be added, ensuring that it doesn't touch any existing islands.
+4. Track the maximum island size found during this process.
+
+Here's a Python implementation of the above approach:
+
+```python
+def largest_possible_island(matrix):
+    if not matrix:
+        return 0
+
+    m, n = len(matrix), len(matrix[0])
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Down, Up, Right, Left
+
+    def is_valid(x, y):
+        return 0 <= x < m and 0 <= y < n
+
+    def touches_island(x, y):
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if is_valid(nx, ny) and matrix[nx][ny] == 1:
+                return True
+        return False
+
+    def flood_fill(x, y):
+        queue = deque([(x, y)])
+        visited.add((x, y))
+        size = 1
+
+        while queue:
+            cx, cy = queue.popleft()
+
+            for dx, dy in directions:
+                nx, ny = cx + dx, cy + dy
+                if is_valid(nx, ny) and (nx, ny) not in visited and matrix[nx][ny] == 0 and not touches_island(nx, ny):
+                    visited.add((nx, ny))
+                    queue.append((nx, ny))
+                    size += 1
+
+        return size
+
+    max_island_size = 0
+    for i in range(m):
+        for j in range(n):
+            if matrix[i][j] == 0 and not touches_island(i, j):
+                visited = set()
+                island_size = flood_fill(i, j)
+                max_island_size = max(max_island_size, island_size)
+
+    return max_island_size
+
+# Example usage:
+matrix = [
+    [0, 0, 0],
+    [1, 0, 1],
+    [1, 0, 0]
+]
+print(largest_possible_island(matrix))  # Output: 1
+```
+
+### Explanation:
+1. **Initialization**:
+   - `m, n` represent the dimensions of the matrix.
+   - `directions` defines the four possible movement directions (down, up, right, left).
+
+2. **Helper Functions**:
+   - `is_valid(x, y)`: Checks if the coordinates `(x, y)` are within the matrix bounds.
+   - `touches_island(x, y)`: Checks if the cell `(x, y)` touches any existing island.
+
+3. **Flood Fill Function**:
+   - `flood_fill(x, y)`: Performs a BFS starting from `(x, y)` to calculate the size of the possible island. It ensures that the new island doesn't touch any existing islands.
+
+4. **Main Logic**:
+   - Iterate through all cells in the matrix.
+   - For each water cell that doesn't touch an existing island, perform a flood fill to determine the size of the possible island.
+   - Track the maximum island size found during this process.
+
+### Example:
+For the input matrix:
+```
+[
+  [0, 0, 0],
+  [1, 0, 1],
+  [1, 0, 0]
+]
+```
+The largest possible island that can be added without touching existing islands has a size of `3`.
+
+
 ## Nearest zero (scattered zero, so less zero more ones)
 Let's solve this problem by using a Breadth-First Search (BFS) approach. The idea is to initialize a queue with all positions of zeros and then perform a multi-source BFS to calculate the minimum distance to the nearest zero for each cell in the matrix.
 
