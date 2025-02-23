@@ -1264,6 +1264,78 @@ print(maxConsecutiveHolidays(days, k))  # Output: 7
    - For the given `days` list and `k = 2`, the output is `7`, which is the maximum number of consecutive holidays you can achieve by converting up to 2 weekdays to holidays.
   
 To include PTO (Paid Time Off) days in the calculation for maximizing consecutive off days, we can modify the solution accordingly. The approach will be similar, but we'll consider PTO days as part of our sliding window logic.
+## if half days are allowed
+To tackle this problem, we need to find the maximum number of consecutive holidays we can achieve by converting up to `k` weekdays to holidays. If half-days are allowed, we need to account for them as well, as they could potentially increase the number of holidays.
+
+Here’s how we can approach the problem:
+
+### Approach
+
+1. **Sliding Window Technique**: We'll use a sliding window to keep track of the current number of converted holidays within the allowed `k` conversions.
+2. **Half-Day Handling**: If half-days are allowed, each "W" can be converted to either half a day off (0.5 holidays) or a full day off (1 holiday). We'll need to adjust our window calculations to consider half-days.
+3. **Tracking Maximum Holidays**: As we slide the window across the list, we'll keep track of the maximum number of consecutive holidays we can achieve.
+
+### Implementation
+
+Here’s a Python implementation of this approach:
+
+```python
+def max_consecutive_holidays(days, k, allow_half_day=False):
+    n = len(days)
+    max_holidays = 0
+    left = 0
+    convert_count = 0
+    half_day_count = 0
+    
+    for right in range(n):
+        if days[right] == "W":
+            if allow_half_day and half_day_count < k:
+                half_day_count += 1
+            else:
+                convert_count += 1
+
+        while convert_count > k:
+            if days[left] == "W":
+                if allow_half_day and half_day_count > 0:
+                    half_day_count -= 1
+                else:
+                    convert_count -= 1
+            left += 1
+
+        current_holidays = right - left + 1
+        if allow_half_day:
+            current_holidays += half_day_count * 0.5 - (right - left + 1 - half_day_count)
+        max_holidays = max(max_holidays, current_holidays)
+
+    return max_holidays
+
+# Example usage:
+days = ["W", "H", "W", "H", "W", "W", "H", "W"]
+k = 2
+print(max_consecutive_holidays(days, k))  # Without half-day: Output will be the maximum holidays possible
+print(max_consecutive_holidays(days, k, allow_half_day=True))  # With half-day: Output will include half-day calculations
+```
+
+### Explanation
+1. **Initialization**:
+   - `n` is the length of the `days` list.
+   - `max_holidays` keeps track of the maximum number of consecutive holidays found so far.
+   - `left` is the left index of the sliding window.
+   - `convert_count` is the count of full days converted to holidays.
+   - `half_day_count` is the count of half days converted to holidays.
+
+2. **Sliding Window**:
+   - We iterate over the `days` list with the `right` pointer.
+   - For each "W" in the list, we either convert it to a full day off or a half-day off (if allowed).
+
+3. **Adjust Window**:
+   - If the number of converted days exceeds `k`, we move the `left` pointer to shrink the window until the condition is satisfied again.
+
+4. **Calculating Holidays**:
+   - Calculate the current number of consecutive holidays, adjusting for half-days if allowed.
+   - Update the `max_holidays` if the current number is greater.
+
+
 
 ### Problem Statement:
 Given a list of days represented as "W" (Weekdays), "H" (Holidays), and "P" (PTO), and a number `k`, representing the maximum number of weekdays you can convert to holidays, find the maximum number of consecutive off days (including Holidays and PTO) you can achieve.
