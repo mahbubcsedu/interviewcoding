@@ -1141,7 +1141,7 @@ D = [10, 7, 8, 8, 9]
 R = [8, 10, 7, 8, 9]
 print(min_total_cost(D, R))  # Output: 14
 ```
-
+```python
 def find_min_total_cost(D, R):
     n = len(D)
     if n == 0:
@@ -1166,7 +1166,7 @@ D = [10, 7, 8, 8, 9]
 R = [8, 10, 7, 8, 9]
 result = find_min_total_cost(D, R)
 print(result)  # Output: 14 (depart on day 2 and return on day 3)
-
+```
 In this function, we iterate through each departure day `i` and for each `i`, we iterate through each return day `j` starting from `i`. We calculate the total cost for each combination and keep track of the minimum total cost found.
 ## Find kth largest elements when k is 1-based
 ```python
