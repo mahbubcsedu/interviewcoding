@@ -2179,6 +2179,70 @@ In this implementation:
 This `MagicMap` class is not similar to an LRU cache, as it does not implement any caching or eviction policies. An LRU (Least Recently Used) cache typically has methods for getting and putting items, with an additional mechanism to evict the least recently used items when the cache reaches its capacity.
 
 ### count monotonic subarray
+We can do two loops to find increasing or decreasing O(n+n) 
+```python
+# Python Program to find the number of strictly increasing
+# and decreasing subarrays
+
+# Function to find the count of strictly increasing subarrays
+def count_increasing(arr):
+    # Initialize result
+    cnt = 0
+
+    # Initialize start and end pointers
+    start = 0
+    end = 1
+
+    # Traverse through the array
+    while end < len(arr):
+        if arr[end] <= arr[end - 1]:
+            # Calculate the length of the increasing subarray
+            length = end - start
+            # Add the number of increasing subarrays
+            cnt += (length * (length + 1)) // 2
+            # Update the start pointer
+            start = end
+        end += 1
+
+    # Count the last remaining subarrays
+    length = end - start
+    cnt += ((length * (length + 1)) // 2)
+
+    return cnt
+
+# Function to find the count of strictly decreasing subarrays
+def count_decreasing(arr):
+    # Initialize result
+    cnt = 0
+
+    # Initialize start and end pointers
+    start = 0
+    end = 1
+
+    # Traverse through the array
+    while end < len(arr):
+        if arr[end] >= arr[end - 1]:
+            # Calculate the length of the decreasing subarray
+            length = end - start
+            # Add the number of decreasing subarrays
+            cnt += (length * (length + 1)) // 2
+            # Update the start pointer
+            start = end
+        end += 1
+
+    # Count the last remaining subarrays
+    length = end - start
+    cnt += ((length * (length + 1)) // 2)
+
+    return cnt
+
+# Driver code
+arr = [80, 50, 60, 70, 40, 40]
+print("Count of strictly increasing subarrays is", count_increasing(arr))
+print("Count of strictly decreasing subarrays is", count_decreasing(arr))
+
+```
+
 To count the number of monotonic subarrays (both increasing and decreasing) in a given array, we can use a two-pointer approach. Here's a Python function to accomplish this:
 
 ```python
