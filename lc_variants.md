@@ -2237,4 +2237,28 @@ In this implementation:
 - We identify all the indices where the maximum value is located using a list comprehension.
 - We randomly select one of these indices using `random.choice`.
 
+## With O(1) space reservoire sampling
+import random
+
+def random_max_index(arr):
+    max_val = float('-inf')
+    count = 0
+    result = -1
+
+    for i, val in enumerate(arr):
+        if val > max_val:
+            max_val = val
+            count = 1
+            result = i
+        elif val == max_val:
+            count += 1
+            # Reservoir sampling: replace result with current index with probability 1/count
+            if random.randint(1, count) == 1:
+                result = i
+                
+    return result
+
+# Example usage
+arr = [1, 3, 3, 2, 3]
+print(random_max_index(arr))  # Randomly returns one of the indices of the maximum value (1, 2, or 4)
 
