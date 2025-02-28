@@ -993,21 +993,32 @@ Here's a Python implementation:
 
 ```python
 def evaluate_expression(expression):
-    def helper(tokens):
-        token = tokens.pop()
-        if token == '+':
-            return helper(tokens) + helper(tokens)
-        elif token == '-':
-            return helper(tokens) - helper(tokens)
-        elif token == '*':
-            return helper(tokens) * helper(tokens)
-        elif token == '/':
-            return helper(tokens) // helper(tokens)
-        else:
-            return int(token)
+    # Split the expression into tokens
+    tokens = expression.replace('(', '').replace(')', '').split()
 
-    tokens = expression.split()[::-1]
-    return helper(tokens)
+    # Initialize stack
+    stack = []
+
+    # Process tokens from right to left
+    while tokens:
+        token = tokens.pop()
+        if token.isdigit():
+            stack.append(int(token))
+        else:
+            # Process operator
+            operand1 = stack.pop()
+            operand2 = stack.pop()
+            if token == '+':
+                stack.append(operand1 + operand2)
+            elif token == '-':
+                stack.append(operand1 - operand2)
+            elif token == '*':
+                stack.append(operand1 * operand2)
+            elif token == '/':
+                stack.append(int(operand1 / operand2))  # Use int() to perform integer division
+
+    # Result is the last remaining element in the stack
+    return stack.pop()
 
 # Example usage:
 expression = "( + 3 2 ( * 4 6 ) )"
@@ -1015,6 +1026,7 @@ expression = "( + 3 2 ( * 4 6 ) )"
 expression = expression.replace('(', '').replace(')', '')
 result = evaluate_expression(expression)
 print(result)  # Output: 27
+
 ```
 
 In this implementation:
