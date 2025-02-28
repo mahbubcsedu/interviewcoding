@@ -1142,6 +1142,31 @@ R = [8, 10, 7, 8, 9]
 print(min_total_cost(D, R))  # Output: 14
 ```
 
+def find_min_total_cost(D, R):
+    n = len(D)
+    if n == 0:
+        return 0
+
+    # Initialize the minimum departure price
+    min_departure_price = float('inf')
+    min_total_cost = float('inf')
+
+    for i in range(n):
+        # Update the minimum departure price up to the current day
+        min_departure_price = min(min_departure_price, D[i])
+        # Calculate the total cost for returning on the current day
+        total_cost = min_departure_price + R[i]
+        # Update the minimum total cost
+        min_total_cost = min(min_total_cost, total_cost)
+    
+    return min_total_cost
+
+# Example usage
+D = [10, 7, 8, 8, 9]
+R = [8, 10, 7, 8, 9]
+result = find_min_total_cost(D, R)
+print(result)  # Output: 14 (depart on day 2 and return on day 3)
+
 In this function, we iterate through each departure day `i` and for each `i`, we iterate through each return day `j` starting from `i`. We calculate the total cost for each combination and keep track of the minimum total cost found.
 ## Find kth largest elements when k is 1-based
 ```python
