@@ -1,4 +1,76 @@
-## Given a map of existing islands in a section of the ocean, find the size of the largest island you can add that doesn't touch any existing islands
+### Simplify path variants
+To transform an absolute path into its simplified canonical path in a Unix-style file system, you can follow these steps:
+
+1. Split the input path by slashes `/`.
+2. Use a stack to process each component of the path.
+   - Ignore empty components and single periods `.`.
+   - For double periods `..`, pop the top element from the stack if it's not empty.
+   - For other components (valid directory or file names), push them onto the stack.
+3. Join the stack components with slashes to form the simplified path.
+4. Ensure the path starts with a single slash `/`.
+
+Here's a Python function to achieve this:
+
+```python
+def simplify_path(current_directory: str, cd_path: str) -> str:
+    # Combine the current directory and the given path
+    if cd_path.startswith('/'):
+        path = cd_path
+    else:
+        path = current_directory.rstrip('/') + '/' + cd_path
+    
+    # Split the path into components
+    components = path.split('/')
+    
+    # Stack to process the path components
+    stack = []
+    
+    for component in components:
+        if component == '' or component == '.':
+            # Ignore empty components and current directory '.'
+            continue
+        elif component == '..':
+            # Go to the parent directory if possible
+            if stack:
+                stack.pop()
+        else:
+            # Valid directory or file name, push to stack
+            stack.append(component)
+    
+    # Join the stack components to form the simplified path
+    simplified_path = '/' + '/'.join(stack)
+    
+    return simplified_path
+
+# Example usage
+current_directory = "/home/user"
+cd_path = "../docs"
+simplified_path = simplify_path(current_directory, cd_path)
+print(simplified_path)  # Output: "/home/docs"
+```
+
+### Explanation:
+1. **Combine Paths:**
+   - If the given `cd_path` is an absolute path (starts with `/`), use it directly.
+   - If it’s a relative path, combine it with the `current_directory`.
+
+2. **Split Components:**
+   - Split the combined path into components using the `/` delimiter.
+
+3. **Process Components:**
+   - Use a stack to process each component.
+   - Ignore empty components and single periods `.`.
+   - For double periods `..`, pop the top element from the stack if it’s not empty.
+   - Push valid directory or file names onto the stack.
+
+4. **Form Simplified Path:**
+   - Join the stack components with slashes to create the simplified canonical path.
+   - Ensure the path starts with a single slash `/`.
+
+By following these steps, you can transform an absolute path into its simplified canonical path, similar to the Unix `cd` command.
+## Islands II variants
+Given a map of existing islands in a section of the ocean, find the size of the largest island you can add that doesn't touch any existing islands
+
 To find the size of the largest island you can add without touching any existing islands, we can follow these steps:
 
 1. Parse the input matrix representing the ocean and existing islands.
