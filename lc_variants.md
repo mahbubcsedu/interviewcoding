@@ -1,3 +1,45 @@
+### variation of unique path
+Here's a Python function to generate all unique paths in an n x n matrix, starting from the top-left corner and ending at the bottom-right corner, only moving down or right. This function will return the paths as a list of strings with "d" representing down and "r" representing right:
+
+```python
+def find_unique_paths(n):
+    def backtrack(path, row, col):
+        if row == n - 1 and col == n - 1:
+            result.append(path)
+            return
+        if row < n - 1:
+            backtrack(path + 'd', row + 1, col)
+        if col < n - 1:
+            backtrack(path + 'r', row, col + 1)
+    
+    result = []
+    backtrack('', 0, 0)
+    return result
+
+# Example usage
+n = 3
+unique_paths = find_unique_paths(n)
+print(unique_paths)  # Output: ["ddrr", "drrd", "drdr", "rddr", "rdrd", "rrdd"]
+```
+
+### Explanation:
+
+1. **Define the Backtracking Function:**
+   - The `backtrack` function takes three parameters: the current path (`path`), the current row (`row`), and the current column (`col`).
+   - If the function reaches the bottom-right corner (`row == n - 1` and `col == n - 1`), it appends the current path to the result list.
+   - If moving down is possible (`row < n - 1`), it calls itself recursively with the path extended by "d".
+   - If moving right is possible (`col < n - 1`), it calls itself recursively with the path extended by "r".
+
+2. **Initialize Result List:**
+   - Initialize an empty list `result` to store all unique paths.
+
+3. **Start Backtracking:**
+   - Start the backtracking process from the top-left corner (`row = 0`, `col = 0`) with an empty path.
+
+4. **Return Result:**
+   - The function returns the list of all unique paths found.
+
+This approach uses backtracking to explore all possible paths from the top-left to the bottom-right corner, ensuring that each path is valid and added to the result list.
 ### Simplify path variants
 To transform an absolute path into its simplified canonical path in a Unix-style file system, you can follow these steps:
 
