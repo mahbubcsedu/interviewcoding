@@ -258,3 +258,55 @@ capacity = 4
 - **Space Complexity**: \(O(n)\), for the difference array up to the maximum location.
 
 This solution efficiently handles the problem by avoiding direct range updates, which would have been more time-consuming.
+
+### More complex problem: 3356. Zero Array Transformation II
+You are given an integer array nums of length n and a 2D array queries where queries[i] = [li, ri, vali].
+
+Each queries[i] represents the following action on nums:
+
+Decrement the value at each index in the range [li, ri] in nums by at most vali.
+The amount by which each value is decremented can be chosen independently for each index.
+A Zero Array is an array with all its elements equal to 0.
+
+Return the minimum possible non-negative value of k, such that after processing the first k queries in sequence, nums becomes a Zero Array. If no such k exists, return -1.
+
+```python
+class Solution:
+    def minZeroArray(self, nums: List[int], queries: List[List[int]]) -> int:
+        # use array difference algorithm 
+        # focus one each number starting from index=0
+        # if a range query i< left, then it has impact on later numbers and we store it in prefix_sum or total_sum 
+        # if i > right, that means, this query range does not have any impact
+        # if left <=i<=right, it has direct impact to current item, so apply it and also update total for later part
+
+        n = len(nums)
+        total_sum = 0
+
+        difference_array = [0] * (n+1)
+
+        k=0
+
+        for index in range(n):
+            # if current index already covered then move else find solution
+            while total_sum + difference_array[index] < nums[index]:
+                k+=1
+                # edge case, if no query left, return -1
+                if k > len(queries):
+                    return -1
+                
+                left, right, value = queries[k-1]
+
+                if right>=index:
+                    # basically the third case
+                    # we will apply to future or current
+                    # if future, left will be greater than index
+                    # if left started early but did not needed previously, then for current, just apply on index
+                    # why something will apply that was not applied on prvious indeces? because we are checking if actually needed
+                    # to apply byt he condition above
+                    difference_array[max(left, index)] += value 
+                    difference_array[right+1] -=value
+            # this should not be under while loop otherwise we are changing condition while evaluating  
+            total_sum += difference_array[index]
+        return k
+        
+```
