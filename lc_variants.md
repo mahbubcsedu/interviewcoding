@@ -2439,6 +2439,14 @@ def find_valley_or_plain(arr):
 arr = [1, 2, 1, 3, 3, 3, 4, 5, 4]
 print(find_valley_or_plain(arr))  # Output: (2, 'Valley') or (4, 'Plain')
 ```
+
+The time complexity of the provided solution is O(n log n). Here's the breakdown:
+
+**Binary Search:** The binary search approach divides the array into two halves at each step, leading to a logarithmic number of divisions, which is O(log n).
+**Checking Triplets:** For each division, the algorithm checks a triplet of elements, which is a constant-time operation, O(1).
+Since the binary search is applied recursively, the overall time complexity is the product of these two operations: O(n log n).
+
+
 ## randomly output index of maximum value
 To randomly output the index of the maximum value in an array, we can first identify all the indices of the maximum value. Then, we can randomly select one of these indices. 
 
