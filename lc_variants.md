@@ -2455,7 +2455,7 @@ def random_max_index(arr):
         elif val == max_val:
             count += 1
             # Reservoir sampling: replace result with current index with probability 1/count
-            if random.randint(1, count) == 1:
+            if random.randint(1, count) == 1: # it could be any position between 1 and count like random.randint(1, count)==count
                 result = i
                 
     return result
