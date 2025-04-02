@@ -2410,7 +2410,7 @@ In this implementation:
 - It checks if the current element forms a valley or a plain with its neighbors and appends the triplet to the result list if it does.
 - The function returns a list of all valleys and plains found in the array.
 
-### Binary search option
+  -Binary search option
 ```python
 def find_valley_or_plain(arr):
     def check_triplet(i):
