@@ -135,3 +135,67 @@ class Solution:
 o = Solution()
 print(o.basic_calculator(" 2 + 3 * 4 + 3 "))
 ```
+```python
+def power(x, n):
+    # n can be negative 2^-n 
+    # x can be positive or negative
+    # if n negative then x become (1/x)^n 
+
+    result = 1
+    if n < 0:
+        x = 1/x 
+    
+    n = abs(n)
+
+    while n:
+
+        if n & 1:
+            result = result * x 
+        
+        n=n//2
+        x=x*x 
+    
+    return result 
+
+print(power(2,10))
+```
+
+```python
+import heapq
+class Solution:
+    def __init__(self, grid):
+        self.size = len(grid)
+        self.grid=grid
+
+    def estimate(self, row, col):
+        # if we take any path row or column return max distance estimate 
+        return max(self.size-1-row, self.size-1-col)
+
+    
+    def shortest_path_matrix(self):
+        if self.grid[0][0] != 0 or self.grid[self.size-1][self.size-1]!=0:
+            return -1
+        
+        pq = [(1+self.estimate(0, 0), 1, (0,0))]
+        visited = set()
+
+        direction = [(1,0),(0,1),(-1,0),(0,-1)]
+
+        while pq:
+            est, dist, (r,c) = heapq.heappop(pq)
+
+            if (r,c) in visited:
+                continue 
+            if r==self.size-1 and c==self.size-1:
+                return dist 
+            
+            for d in direction:
+                nr, nc = r+d[0], c+d[1]
+
+                if 0<=nr<self.size and 0<=nc<self.size and (nr, nc) not in visited and self.grid[nr][nc]==0:
+                    f_score = self.estimate(nr, nc)
+                    g_score = f_score + dist + 1
+                    heapq.heappush(pq, (g_score, dist+1, (nr, nc)))
+        
+        return -1 
+```
