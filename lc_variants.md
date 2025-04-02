@@ -1079,6 +1079,25 @@ In this implementation:
 - The `find_second_highest` function converts the integers to strings, sorts them using the custom comparator, and converts them back to integers.
 - Finally, it retrieves and returns the second highest value from the sorted list.
 
+Sure! The `custom_compare` function is a comparator used to sort the numbers in a specific order. Here's a breakdown of what it does:
+
+1. **Comparator Function**: The `custom_compare` function takes two arguments, `x` and `y`, which are strings representing numbers.
+2. **Concatenation Comparison**: It compares the concatenated results of `x + y` and `y + x`. This is to determine which combination forms a larger number when the two strings are concatenated.
+   - If `x + y` is greater than `y + x`, it returns `-1`, meaning `x` should come before `y`.
+   - If `x + y` is less than `y + x`, it returns `1`, meaning `y` should come before `x`.
+   - If they are equal, it returns `0`, meaning their order doesn't matter.
+
+The purpose of this comparator is to sort the numbers in such a way that when concatenated, they form the largest possible number. In the context of your `find_second_highest` function:
+
+- **Convert Integers to Strings**: The numbers are first converted to strings.
+- **Sort Using Comparator**: The strings are sorted using the `custom_compare` function.
+- **Convert Back to Integers**: The sorted strings are converted back to integers.
+- **Return Second Highest**: The function returns the second highest value from the sorted list.
+
+In your example with `nums = [1, 2, 3, 4, 5]`, the sorted order based on the comparator would be `[5, 4, 3, 2, 1]`, and the second highest value is `4`.
+
+
+
 
 ## Evaluate postfix
 To evaluate an expression like `( + 3 2 ( * 4 6 ) )`, which is in prefix notation (also known as Polish notation), you can use a stack-based approach. Here's how you can do it:
