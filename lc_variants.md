@@ -2439,6 +2439,7 @@ In this implementation:
 - We randomly select one of these indices using `random.choice`.
 
 ## With O(1) space reservoire sampling
+```python
 import random
 
 def random_max_index(arr):
@@ -2462,4 +2463,5 @@ def random_max_index(arr):
 # Example usage
 arr = [1, 3, 3, 2, 3]
 print(random_max_index(arr))  # Randomly returns one of the indices of the maximum value (1, 2, or 4)
+```
 
