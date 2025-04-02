@@ -96,3 +96,42 @@ o = Solution()
 print(o.kth_largest([3,2,1,5,6,9], 3))
 
 ```
+
+```python
+# 23 + 34 * 3/2+1
+# last=23, cur = 34, pre_op=+, cur_character is operator when we are making decision 
+import math
+class Solution:
+
+    def basic_calculator(self, s:str):
+        # s+="+"
+        
+        # not readable code
+
+        eval_val = 0
+        last_num = 0
+        cur_num = 0
+        previous_operator = "+"
+
+        for index, ch in enumerate(s):
+            if ch.isdigit():
+                cur_num = cur_num * 10 + int(ch)
+            if ch in "+-/*" or index == len(s)-1:
+                if previous_operator == "+":
+                    eval_val += last_num 
+                    last_num = cur_num
+                elif previous_operator=="-":
+                    eval_val -= last_num 
+                    last_num = cur_num
+                elif previous_operator == "*":
+                    last_num = last_num * cur_num
+                else:
+                    last_num = math.ceil(last_num/cur_num) 
+                previous_operator=ch
+                cur_num=0
+
+        return last_num + eval_val
+
+o = Solution()
+print(o.basic_calculator(" 2 + 3 * 4 + 3 "))
+```
